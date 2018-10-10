@@ -44,9 +44,12 @@
               this.position.x = this.parent.position.x + offsetx;
               this.position.y = this.parent.position.y + size + offsety;        
             }       
-            var coords2d = this.get2DCoords(this.position, _this.camera);
-            this.element.style.left = coords2d.x + 'px';
-            this.element.style.top = coords2d.y + 'px';
+            //var coords2d = this.get2DCoords(this.position, _this.camera);
+            //this.element.style.left = coords2d.x + 'px';
+            //this.element.style.top = coords2d.y + 'px';
+            this.element.style.left = offsetx - 125 + 'px';
+            this.element.style.top = offsety - 45 + 'px';
+            
           } ,
           get2DCoords: function(position, camera)
            {

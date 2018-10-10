@@ -30,9 +30,9 @@ void main()
 
     vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
     vec4 vWorldPosition = worldPosition;
-    vec3 normalDirection = normalize((modelMatrix * vec4(normal, 0.0))).xyz;
+    vec3 normalDirection = (modelViewMatrix * vec4(normal, 0.0)).xyz;
     lightDirection = normalize(directionalLights[0].direction);
-    vec3 viewDirection = normalize(cameraPosition - worldPosition.xyz);
+    vec3 viewDirection = (modelViewMatrix * vec4 (position, 1.0)).xyz;
 
     vUv = uv;
 

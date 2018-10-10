@@ -17,11 +17,13 @@ var mouseDown = false;
 var boxsize = 25;
 var skyboxuniforms;
 var textureList = [];
+var moonListsize = 0;
+var ringlistsize = 0;
 
 var planetSize, planetData, inPlanet, planet,
     planetText, planetTextInfo, atmoMaterial, planetTilt, hasRings,
-    PlanetMaterial, moonList, ringsList, outline,
-    atmo, planetRotationPeriod, planetSelected;
+    PlanetMaterial, moonList, ringsList , outline,
+    atmo, planetRotationPeriod, planetSelected, planetName;
 
 var targetPoint = { object: new THREE.Object3D(), size: 0 };
 
@@ -36,86 +38,86 @@ var atmoGrad;
 var showMoonOrbits;
 
 var atmouniforms =
-    {
-        fresnelExp: { type: "f", value: 0 },
-        transitionWidth: { type: "f", value: 0.1 },
-        atmoThickness: { type: "f", value: 0.1 },
-        indexMatrix16x16: { type: "fv1", value: DitherPattern4x4 },
-        palette: { type: "v3v", value: GrayScalePallete },
-        paletteSize: { type: "i", value: 8 },
-        colorlight: { type: "v3", value: 0 },
-        colordark: { type: "v3", value: 0 },
-        _Gradient: { type: "t", value: null }
-    }
+{
+    fresnelExp: { type: "f", value: 0 },
+    transitionWidth: { type: "f", value: 0.1 },
+    atmoThickness: { type: "f", value: 0.1 },
+    indexMatrix16x16: { type: "fv1", value: DitherPattern4x4 },
+    palette: { type: "v3v", value: GrayScalePallete },
+    paletteSize: { type: "i", value: 8 },
+    colorlight: { type: "v3", value: 0 },
+    colordark: { type: "v3", value: 0 },
+    _Gradient: { type: "t", value: null }
+}
 
 var skyboxuniforms =
-    {
-        resolution: { type: "v2", value: new THREE.Vector2() },
-        randomColsMults: {
-            type: "v3",
-            value: new THREE.Vector3(
-                randomRange(0, 10),
-                randomRange(0, 10),
-                randomRange(0, 10))
-        },
-        time: { type: "f", value: 1.0 }
-    }
+{
+    resolution: { type: "v2", value: new THREE.Vector2() },
+    randomColsMults: {
+        type: "v3",
+        value: new THREE.Vector3(
+            randomRange(0, 10),
+            randomRange(0, 10),
+            randomRange(0, 10))
+    },
+    time: { type: "f", value: 1.0 }
+}
 
 var planetUniform =
-    {
-        indexMatrix16x16: { type: "fv1", value: DitherPattern4x4 },
-        palette: { type: "v3v", value: GrayScalePallete },
-        paletteSize: { type: "i", value: 8 },
-        texture: { type: "t", value: null },
-        lightpos: { type: 'v3', value: new THREE.Vector3(0, 30, 20) },
-        noTexture: { type: "i", value: 0 },
-        customColorSwitch: { type: "i", value: 1 },
-        customColor: { type: "i", value: new THREE.Vector4(.48, .89, .90, 1) }
-    };
+{
+    indexMatrix16x16: { type: "fv1", value: DitherPattern4x4 },
+    palette: { type: "v3v", value: GrayScalePallete },
+    paletteSize: { type: "i", value: 8 },
+    texture: { type: "t", value: null },
+    lightpos: { type: 'v3', value: new THREE.Vector3(0, 30, 20) },
+    noTexture: { type: "i", value: 0 },
+    customColorSwitch: { type: "i", value: 1 },
+    customColor: { type: "i", value: new THREE.Vector4(.48, .89, .90, 1) }
+};
 
 var ringUniform =
-    {
-        color: { type: "vf3", value: new THREE.Vector3(1, 1, 1) },
-        side: THREE.DoubleSide,
-        indexMatrix16x16: { type: "fv1", value: DitherPattern4x4 },
-        palette: { type: "v3v", value: GrayScalePallete },
-        paletteSize: { type: "i", value: 8 },
-        colors: { type: "v3v", value: 0 },
-        ringLimits: { type: "fv1", value: 0 },
-        transparency: { type: "fv1", value: 0 }
-    };
+{
+    color: { type: "vf3", value: new THREE.Vector3(1, 1, 1) },
+    side: THREE.DoubleSide,
+    indexMatrix16x16: { type: "fv1", value: DitherPattern4x4 },
+    palette: { type: "v3v", value: GrayScalePallete },
+    paletteSize: { type: "i", value: 8 },
+    colors: { type: "v3v", value: 0 },
+    ringLimits: { type: "fv1", value: 0 },
+    transparency: { type: "fv1", value: 0 }
+};
 var sundata =
-    {
-        radius: 1.5424, tilt: 0, N1: 125.1228, N2: 0,
-        i1: 10.6, i2: 0, w1: 318.0634, w2: 0.1643573223,
-        a1: 0.5, a2: 0, e1: 0, e2: 0,
-        M1: 115.3654, M2: 13.0649929509, period: 1, moonSize: "",
-        moonObject: "", material: "", selected: false,
-        moonOrbit: 0, orbitSpeedMult: 2, inMoon: false, text: false
-    }
+{
+    radius: 1.5424, tilt: 0, N1: 125.1228, N2: 0,
+    i1: 10.6, i2: 0, w1: 318.0634, w2: 0.1643573223,
+    a1: 0.5, a2: 0, e1: 0, e2: 0,
+    M1: 115.3654, M2: 13.0649929509, period: 1, moonSize: "",
+    moonObject: "", material: "", selected: false,
+    moonOrbit: 0, orbitSpeedMult: 2, inMoon: false, text: false
+}
 
 var ShaderLoadList =
-    {
-        planet: new Shader
-            (
-            ),
+{
+    planet: new Shader
+        (
+        ),
 
-        atmo: new Shader
-            (
-            ),
+    atmo: new Shader
+        (
+        ),
 
-        asto: new Shader
-            (
-            ),
+    asto: new Shader
+        (
+        ),
 
-        ring: new Shader
-            (
-            ),
+    ring: new Shader
+        (
+        ),
 
-        cloud: new Shader
-            (
-            ),
-    }
+    cloud: new Shader
+        (
+        ),
+}
 
 init();
 animate();
@@ -167,7 +169,8 @@ function init() {
     clock = new THREE.Clock();
 
     //Add Controls
-    //controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.addEventListener('change', UpdateLook);
     //controls.minZoom = 0.3;
     //controls.maxZoom = 1.5;
 
@@ -191,7 +194,7 @@ function init() {
     dirLight.shadow.camera.far = 2500;
     dirLight.shadow.bias = -0.01;
 
-    var shadowCam = new THREE.CameraHelper(dirLight.shadow.camera);
+    //var shadowCam = new THREE.CameraHelper(dirLight.shadow.camera);
     //MainScene.add(shadowCam);
     MainScene.add(dirLight);
 
@@ -213,7 +216,7 @@ function init() {
 
     MainRenderPass.renderToScreen = true;
 
-    //controls.addEventListener("change", render);
+    controls.addEventListener("change", render);
     //var gridHelper = new THREE.GridHelper(1000, 20);
     //MainScene.add( gridHelper );
 
@@ -337,6 +340,14 @@ function animate() {
         PlanetRotation(planet, planetRotationPeriod, planetTilt, delta);
         //planetText.updatePosition(planetSize - 20, - planetText.element.clientWidth / 2, 75);
     }
+
+    if (ringsList !== undefined) {
+        for (var i = 0; i < ringsList.length; i++) {
+            RingOrbit(ringsList[i], ringsList[i].Ring, new THREE.Vector3(0, 0, 0),
+                clock.getElapsedTime(), 1000, 24, delta);
+        }
+    }
+
     MoonsUpdate(clock.getDelta());
     requestAnimationFrame(animate);
     HandleCursor();
@@ -372,14 +383,6 @@ function HandleCursor() {
 
 function MoonsUpdate(delta) {
     //Gana need to Optomize this because thats alot of shit to iterate
-    if (hasRings) {
-        if (ringsList !== undefined) {
-            for (var i = 0; i < ringsList.length; i++) {
-                RingOrbit(ringsList[i], ringsList[i].Ring, new THREE.Vector3(0, 0, 0),
-                    clock.getElapsedTime(), 1000, 24, delta * 42);
-            }
-        }
-    }
 
     if (moonList !== undefined) {
         orbit(sundata, dirLight,
@@ -387,16 +390,37 @@ function MoonsUpdate(delta) {
             1000, delta / 12);
 
         for (var i = 0; i < moonList.length; i++) {
-            moonList[i].text.updatePosition(moonList[i].moonSize,
-                -   moonList[i].text.element.clientWidth / 2, 55);
+            var proj = toScreenPosition(moonList[i].moonObject, camera);
+
+            moonList[i].text.updatePosition(225, proj.x, proj.y);
+
             orbit(moonList[i], moonList[i].moonObject,
                 new THREE.Vector3(0, 0, 0), clock.getElapsedTime() * moonList[i].orbitSpeedMult,
                 1000, delta / 12);
+
             moonList[i].material.uniforms.lightpos.value.copy(dirLight.position);
             manageMoonOrbits(moonList[i].moonOrbit);
         }
     }
 }
+
+//Rings Are Sprites, or Flat, so need to make sure on orbit control change
+//to 
+function UpdateLook() {
+    //console.log("Poo");
+    if (ringsList !== undefined) {
+        for (var i = 0; i < ringsList.length; i++) {
+            if (!ringsList[i].isFlat) {
+                ringsList[i].Ring.traverse(function (child) {
+                    if (child instanceof THREE.Mesh) {
+                        child.lookAt(camera.position);
+                    }
+                });
+            }
+        }
+    }
+}
+
 
 function ShowHideInfo() {
 }
@@ -477,8 +501,8 @@ function MouseInMoon(moon, rad, data) {
 function toScreenPosition(obj, camera) {
     var vector = new THREE.Vector3();
 
-    var widthHalf = window.innerWidth / 2;
-    var heightHalf = window.innerHeight / 2;
+    var widthHalf = 0.5 * window.innerWidth;
+    var heightHalf = 0.5 * window.innerHeight;
 
     obj.updateMatrixWorld();
     vector.setFromMatrixPosition(obj.matrixWorld);
@@ -528,7 +552,9 @@ function CalculateParametres(vertex_text, fragment_text) {
     lacunarity = randomRange(1.9, 2.2);
     octaves = Math.round(randomRange(4, 6));
     noiseScale = randomRange(10, 200);
-    moonList = new Array(Math.round(randomRange(1, 4)));
+    moonListsize = Math.round(randomRange(1, 4))
+    ringlistsize = Math.round(randomRange(1, 4));
+    moonList = new Array(moonListsize);
     planetTilt = randomRange(-55, 55);
     planetSize = randomRange(40, 110);
     planetRotationPeriod = Math.round(randomRange(65, 100));
@@ -548,11 +574,12 @@ function setUpRings(colors, vertex_text, fragment_text) {
 
     ShaderLoadList.asto.vertex = vertex_text;
     ShaderLoadList.asto.fragment = fragment_text;
+    
 
-    ringsList = new Array(Math.round(randomRange(1, 4)));
+    ringsList = new Array(ringlistsize);
 
     var index = randomRangeRound(1, ColorPalletes.length - 1);
-    AstoColorPalleteGrab = colors;//ColorPalletes[index];
+    AstoColorPalleteGrab = colors;
 
     InitializeRingsData(ringsList);
 
@@ -578,6 +605,8 @@ function setUpRings(colors, vertex_text, fragment_text) {
 
             MainScene.add(ringsList[i].Ring);
         }
+
+        UpdateLook();
     }
 }
 
@@ -655,11 +684,11 @@ function InitializeRingsData(ringsList) {
 
         per = randomRange(1, 25);
         if (roll <= 0) {
-            orbitspeed = randomRange(5, 20);
+            orbitspeed = randomRange(25, 50);
             per = (per == 0) ? 1 : orbitspeed;
         }
         else {
-            orbitspeed = randomRange(-5, -20);
+            orbitspeed = randomRange(-25, -50);
             per = (per == 0) ? 1 : orbitspeed;
         }
         var mat;
@@ -880,8 +909,6 @@ function createPlanet(start, vertex_text, fragment_text) {
 
     planetData = createPlantiodData(octaves, persistance, lacunarity,
         seed, noiseScale, offset, textureSize);
-
-
     //Custom image mapping addtion
     //maybe find a smarter way to do this :s
     //regions, url, size, planet, vertex_text, fragment_text
@@ -957,8 +984,21 @@ function createPlanet(start, vertex_text, fragment_text) {
     planetTextInfo.setHeight(planetSize);
     // targetPoint.object = moonList[0].moonObject;
     //targetPoint.size = 0.75;
+
+
+    passVal(planetData.map.image);
 }
 
+function passVal(map) {
+            $.ajax({
+                type: 'POST',
+                url: '/planet_post.php',
+                data: {
+                    name: planetName, texture_00: "Test_Image", size: planetSize, Tilt: planetTilt,
+                    RotationPeriod: planetRotationPeriod, numMoons: moonListsize, numRings: (hasRings) ? ringlistsize : 0
+                },
+            })
+}
 function doDispose(obj) {
     if (obj !== null) {
         for (var i = 0; i < obj.children.length; i++) {
@@ -997,7 +1037,7 @@ function createDataMap(map, size) {
         size,
         THREE.RGBFormat,
         THREE.UnsignedByteType,
-    );
+        );
 
     dataTexture.needsUpdate = true;
 
@@ -1017,7 +1057,7 @@ function createPlantiodData(octaves, persistance, lacunarity, seed, noiseScale, 
         size,
         THREE.RGBFormat,
         THREE.UnsignedByteType,
-    );
+        );
 
     dataTexture.needsUpdate = true;
     textureList.push(dataTexture);
@@ -1117,6 +1157,7 @@ function generateName(parent, fontsize, left, isInfo, colorpallette, regions) {
         name = word(randomRange(3, 25)) + "-" + Math.round(randomRange(0, 1000));
         //name = name.fontsize(12);
         //name = name.bold();
+        planetName = name;
         name = name.anchor("Planet-Name");
 
         newText.setHTML
