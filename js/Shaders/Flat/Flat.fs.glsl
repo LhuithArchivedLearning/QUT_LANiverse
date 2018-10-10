@@ -1,0 +1,8 @@
+		 
+
+		uniform vec4 _Color;
+
+		void main()
+		{
+			gl_FragColor = _Color;
+		}

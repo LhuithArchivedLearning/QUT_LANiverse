@@ -1,0 +1,1373 @@
+    @font-face {
+        font-family: PixelText-Heading;
+        src: url('../fonts/Fipps-Regular.otf');
+    }
+
+    @font-face {
+        font-family: PixelText;
+        src: url('../fonts/thin_pixel-7.ttf');
+    }
+
+    html {
+        background: #000000;
+        /* For browsers that do not support gradients */
+        overflow-x: hidden;
+        overflow: hidden;
+    }
+
+    body {
+        width: 100%;
+        font-family: PixelText;
+        padding: 0;
+        margin: 0;
+        color: black;
+        font-size: 30px;
+        background: black;
+        /* For browsers that do not support gradients */
+        background-color: black;
+        text-align: center;
+        overflow-x: hidden;
+        overflow: hidden;
+        padding: 0px 0px 0px 10px;
+        /*fills the little gap*/
+    }
+
+    .h-adjust {
+        height: 70px!important;
+    }
+
+    .h-adjust2
+    {
+            height: 125px!important;
+    }
+
+    .h-adjust3
+    {
+       height:  90px!important
+    }
+    .f-c-w {
+        color: #ffffff;
+    }
+
+    .w-h-100 {
+        width: 50%;
+        height: 100%;
+    }
+
+    .overlay {
+        width: 100%;
+        height: 100%;
+        z-index: 999;
+        position: absolute;
+        background-color: #8888885e;
+        display: none;
+        left: 0;
+    }
+
+    .overlay p {
+        font-size: 50px;
+        margin: 10px!important;
+        top: 55%;
+        position: fixed;
+        /* bottom: 0; */
+        right: 50%;
+        transform: translate(65px, 0px);
+    }
+
+    .overlay img {
+        width: 30%;
+        /* height: 100%; */
+        position: absolute;
+        top: 23%;
+        right: 50%;
+        max-width: 230px;
+        min-width: 230px;
+        transform: translate(125px, 0px);
+        image-rendering: pixelated;
+    }
+
+    .remove {
+        display: none;
+    }
+
+    .init-button {
+        position: fixed;
+        background-color: lightsalmon;
+        transform: translate(-80px, 0px);
+        z-index: 998;
+    }
+
+    .section.group {
+        position: absolute;
+        bottom: 0;
+        /* right: 50%; */
+        width: 100%;
+    }
+
+    p {
+        margin: 10px!important;
+    }
+
+    h1 {
+        font-family: PixelText-Heading;
+        font-size: 20px;
+        font-weight: 1 !important;
+        line-height: 110%;
+    }
+
+    h2 {
+        font-family: PixelText-Heading;
+        font-size: 10px;
+        padding: 10px 10px 1px 25px;
+    }
+
+    .modal {
+        width: 90% !important;
+        max-height: 70% !important;
+        max-height: 700px;
+    }
+
+    .modal img {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .modal .container-body {
+        max-width: none;
+        width: auto;
+        box-shadow: none;
+        margin: auto;
+        padding: 0;
+    }
+
+    .modal .modal-footer {
+        /* border-radius: 0 0 2px 2px; */
+        /* background-color: #fafafa; */
+        /* padding: 4px 6px; */
+        /* height: 56px; */
+        width: 100%;
+        text-align: right;
+    }
+
+    .modal aside#sidebar {
+        float: none;
+        box-shadow: none!important;
+    }
+
+    /* 
+    div.carousel.carousel-slider.initialized
+     {
+         min-height: 240px!important;
+         max-height: 300px!important;
+    }
+*/
+
+    .modal aside#sidebar img {
+        text-align: center;
+        width: auto;
+    }
+
+    .modal div.modal-banner {
+        width: 100%;
+        height: 150px;
+        background-size: cover;
+    }
+
+    .modal .modal-footer {
+        top: 100%;
+        position: sticky;
+    }
+
+    .modal div.modal-content {
+        padding: 0px;
+    }
+
+    div#modal-image .modal {
+        box-shadow: none;
+        overflow: hidden;
+        background-color: transparent!important;
+    }
+
+    .side-nav {
+        background-color: #F8AC60;
+    }
+
+    /* .tabs-content.carousel .carousel-item { height: 100%; } */
+
+    .side-nav li>a {
+        font-family: PixelText!important;
+        font-size: 30px!important;
+    }
+
+    /* Global */
+
+    .container {
+        width: 80%;
+        margin: auto;
+        overflow: hidden;
+    }
+
+    .container .row {
+        margin-left: auto;
+    }
+
+    /* Global */
+
+    .container-body {
+        width: 25%;
+        margin: auto;
+        overflow: hidden;
+        padding: 0px;
+        max-width: 1087px;
+        min-width: 750px;
+        background-color: #ffe680;
+        /*Curtosy of Alberto Para*/
+        /*https://codepen.io/albpara/pen/xDBvc*/
+        box-shadow: 4px 0 #ffe680, -4px 0 #ffe680, 0 -4px #ffe680, 0 4px #ffe680, 8px 0 #ffe680, -8px 0 #ffe680, 0 -8px rgb(255, 230, 128), 0 8px #ffe680, 0 0 0 4px #ffe680;
+        margin: 8px auto;
+    }
+
+    input {
+        align-items: flex-start;
+        text-align: center;
+        cursor: default;
+        color: buttontext;
+        background-color: buttonface;
+        box-sizing: border-box;
+        padding: 2px 6px 3px;
+        border-width: 2px;
+        border-style: outset;
+        border-color: buttonface;
+        border-image: initial;
+    }
+
+    .anchor {
+        bottom: 0;
+        /* right: 50%; */
+        width: 100%;
+    }
+
+    .dg.main {
+        margin: auto;
+        height: 75px;
+    }
+
+    .dg.main .close-button {
+        display: none;
+    }
+
+    .dg .c {
+        width: 83%!important;
+    }
+
+    .moveGUI li {
+        padding: 0!important;
+        float: none!important;
+    }
+
+    .dg .has-slider input[type=text] {
+        width: 20%!important;
+    }
+
+    .portfolio-body {
+        margin: auto;
+        /*overflow:hidden;*/
+        padding: 0px;
+        max-width: 1087px;
+        min-width: 750px;
+        background-color: #ffe680;
+        width: 95%;
+        /*Curtosy of Alberto Para*/
+        /*https://codepen.io/albpara/pen/xDBvc*/
+        box-shadow: 4px 0 #ffe680, -4px 0 #ffe680, 0 -4px #ffe680, 0 4px #ffe680, 8px 0 #ffe680, -8px 0 #ffe680, 0 -8px #ffe680, 0 8px #ffe680, 0 0 0 4px #ffe680;
+        margin: 8px auto;
+    }
+
+    div#MainBody {
+        padding: 0px 0px 10px 0px;
+    }
+
+    article #port-main-col div {
+        display: table;
+        margin: 0 auto;
+    }
+
+    article #port-main-col h1 {
+        margin: 15px auto;
+        padding: 2px 0px 2px 0px!important;
+        font-size: 15px;
+    }
+
+    article #port-main-col h3 {
+        padding: 0px;
+        line-height: 1.1;
+    }
+
+    article #port-main-col ul {
+        list-style: none;
+    }
+
+    article #port-main-col li {
+        display: inline-block;
+    }
+
+    h2, h3, h4, h5, h6 {
+        padding: 5px;
+        font-weight: 400;
+        line-height: 1.05;
+        /* width: 180px; */
+    }
+
+    article #port-main-col .row .col {
+        float: none;
+        padding: 0 0.20rem!important;
+        width: auto!important;
+    }
+
+    h3#title {
+        width: auto;
+    }
+
+    .Skills-Container {
+        width: 80%;
+        margin: 0px;
+        overflow: hidden;
+    }
+
+    .card p {
+        padding: 0px;
+    }
+
+    .card {
+        border-radius: 0px;
+        box-shadow: 4px 0 #ff6666, -4px 0 #ff6666, 0 -4px #ff6666, 0 4px #ff6666, 8px 0 #ff6666, -8px 0 #ff6666, 0 -8px #ff6666, 0 8px #ff6666, 0 0 0 4px #ff6666;
+        margin: 8px auto;
+        margin: 25px 0px 0px 0px;
+    }
+
+    .card .card-content {
+        padding: 0px 5px 0px 5px;
+    }
+
+    canvas {
+        image-rendering: optimizeSpeed;
+        /* Older versions of FF          */
+        image-rendering: -moz-crisp-edges;
+        /* FF 6.0+                       */
+        image-rendering: -webkit-optimize-contrast;
+        /* Safari                        */
+        image-rendering: -o-crisp-edges;
+        /* OS X & Windows Opera (12.02+) */
+        image-rendering: pixelated;
+        /* Awesome future-browsers       */
+        -ms-interpolation-mode: nearest-neighbor;
+        /* IE     */
+        image-rendering: crisp-edges;
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        overflow: hidden;
+    }
+
+    .extra .row {
+        color: inherit;
+    }
+
+    #SaIT {
+        background-color: #ff6666;
+    }
+
+    .card h3 {
+        margin: 0px;
+        padding: 0px 5px;
+        font-weight: 400;
+    }
+
+    .card p {
+        box-shadow: 4px 0 #ff6666, -4px 0 #ff6666, 0 -4px #ff6666, 0 4px #ff6666, 8px 0 #ff6666, -8px 0 #ff6666, 0 -8px #ff6666, 0 8px #ff6666, 0 0 0 4px #ff6666;
+        margin: 8px auto;
+    }
+
+    #AnD {
+        background-color: #b3ff99;
+    }
+
+    #AnM {
+        background-color: #ffe680;
+    }
+
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    .dark {
+        background: #ff6666;
+        color: #ffffff;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        box-shadow: 4px 0 #ff6666, -4px 0 #ff6666, 0 -4px #ff6666, 0 4px #ff6666, 8px 0 #ff6666, -8px 0 #ff6666, 0 -8px #ff6666, 0 8px #ff6666, 0 0 0 4px #ff6666;
+        margin: 8px auto;
+    }
+
+    a, a:link, a:visited, a:focus, a:active {
+        text-decoration: none;
+    }
+
+    a:hover.sLinks {
+        filter: invert(45%);
+    }
+
+    a:hover.divlink {
+        color: #e8491d;
+    }
+
+    /*Header **/
+
+    header {
+        background: #ff4d4d;
+        color: #ffffff;
+        padding: 0px;
+        min-height: 20px;
+        width: 100%;
+        position: absolute;
+        top: 0px !important;
+        z-index: 100;
+    }
+
+    .row .col.s6 {
+        float: none;
+        padding: 0 0.20rem!important;
+    }
+
+    div#Blog.row .col.m4 {
+        width: 100%;
+        padding: 0px 40px 0px 40px;
+    }
+
+    div#Portfolio.row .col.m4 {
+        width: 100%;
+        padding: 0px 40px 0px 40px;
+    }
+
+    div#Services.row .col.m4 {
+        width: 100%;
+        padding: 0px 40px 0px 40px;
+    }
+
+    div.banner-Container {
+        width: 70%;
+        display: -webkit-inline-box;
+    }
+
+    div.banner-Container img {
+        height: 100%;
+        width: 100%;
+    }
+
+    .carousel.carousel-slider {
+        height: 100% !important;
+        min-height: 600px;
+    }
+
+    .btn {
+        padding: 0;
+    }
+
+    .btn:hover, .btn-large:hover {
+        background-color: transparent;
+    }
+
+    .waves-effect {
+        background-color: transparent;
+        width: 150px;
+        height: 100px;
+        z-index: auto;
+        margin-left: 0px;
+        clip-path: polygon(0% 12%, 3% 12%, 3% 6%, 6% 5%, 6% 0%, 93% 0%, 93% 6%, 97% 6%, 97% 12%, 100% 12%, 100% 88%, 97% 88%, 97% 94%, 94% 94%, 94% 100%, 6% 100%, 6% 94%, 3% 94%, 3% 88%, 0% 88%);
+    }
+
+    div.tab button {
+        /* display: block; */
+        background-color: #F8AC60;
+        color: black;
+        padding: 20px 0px 20px 0px;
+        /* width: 15%; */
+        border: none;
+        /* float: left; */
+        outline: none;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.3s;
+        min-width: 100px;
+    }
+
+    div.tab {
+        display: table;
+        background-color: #F8AC60;
+        position: absolute;
+        z-index: 99;
+        transform: translate(0px, 61px);
+        width: 100%;
+        top: 0px;
+    }
+
+    div.tab button.active {
+        background-color: transparent;
+    }
+
+    div.tab button:hover {
+        background-color: #FFCC99;
+    }
+
+    div.tab ul {
+        /* min-width: 696px; */
+        list-style: none;
+    }
+
+    div.tab li {
+        background-color: transparent;
+        display: inline;
+    }
+
+    div#Emial a {
+        color: #3385ff;
+        padding: 8px 8px 8px 8px;
+    }
+
+    header #branding a.heading {
+        font-family: PixelText-Heading;
+        color: #000000;
+        text-decoration: none;
+    }
+
+    header li {
+        display: inline;
+        padding: 0px;
+    }
+
+    header #branding {
+        float: left;
+    }
+
+    header #branding h1 {
+        margin: 0;
+    }
+
+    header nav {
+        float: right;
+        margin-top: 10px;
+        background-color: transparent;
+        /* -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); */
+        box-shadow: 0 2px 2px 0 transparent, 0 1px 5px 0 transparent, 0 3px 1px -2px transparent;
+        -webkit-box-shadow: 0 2px 2px 0 transparent, 0 1px 5px 0 transparent, 0 3px 1px -2px transparent;
+    }
+
+    header li img {
+        width: 35px;
+        image-rendering: pixelated;
+        margin: auto;
+    }
+
+    header .highlight, header .current a {
+        color: #ffffff;
+        font-weight: 400;
+    }
+
+    #header.container {
+        margin-left: 20px;
+        /*margin-bottom: -10px; */
+    }
+
+    section#main {
+        padding: 80px 0px 10px 0px
+    }
+
+    /* Showcase */
+
+    #showcase {
+        min-height: 300px;
+        background: url('../img/DayTime_Calm.png') no-repeat center center absolute;
+        background-size: 3000px 100%;
+        text-align: centre;
+        color: #000000;
+    }
+
+    #showcase h1 {
+        margin-top: 100px;
+        font-size: 55px;
+        margin-bottom: 10px;
+    }
+
+    #showcase p {
+        font-size: 20px;
+    }
+
+    /* WeblGl Scene Container*/
+
+    canvas {
+        overflow: hidden;
+    }
+
+    .m-5-60 {
+        margin: -15px 15px;
+    }
+
+    .no-pointer {
+        cursor: default;
+    }
+
+    #webGL-container {
+        image-rendering: pixelated;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+    }
+
+    input {
+        -webkit-appearance: none;
+        padding: 0px 27px;
+        background-color: #2fa1d6;
+        margin: 5px;
+        border-radius: 5px;
+        border-width: 0px;
+        font-family: PixelText;
+        font-size: 55px;
+        color: #ffffff;
+    }
+
+    #webGL-container div#heading-Container {
+        left: 0;
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        color: white;
+        /* margin-right: 10px; */
+        position: absolute;
+    }
+
+    #webGL-container h1 a.heading {
+        color: #ffffff;
+        font-weight: 400;
+        font-size: 30px;
+    }
+
+    #webGL-container h1 span.highlight, header .current a {
+        color: #EC3232;
+        font-weight: 400;
+    }
+
+    #webGL-container nav {
+        top: 0;
+        position: absolute;
+        /* width: 100%; */
+    }
+
+    #webGL-container li {
+        padding: 20px;
+    }
+
+    .dg .slider {
+        width: 100%!important;
+    }
+
+    .dg .has-slider input[type=text] {
+        display: none;
+    }
+
+    #webGL-container a {
+        font-size: 45px;
+        padding: 0px;
+        color: white;
+        height: 100%;
+    }
+
+    .Planet-Info {
+        float: left;
+        font-size: 30px !important;
+        line-height: 15px;
+        width: 40% !important;
+        position: absolute;
+        font-size: 35px;
+        text-align: left;
+        width: 75%;
+        top: 65%!important;
+        left: 2%!important;
+    }
+
+    #tickleBox {
+        border: 1px solid white;
+        width: 300px;
+        height: 300px;
+        color: #3385ff;
+    }
+
+    #webGL-container a:hover {
+        color: #3385ff;
+    }
+
+    /* Boxes */
+
+    #boxes .box {
+        width: 30%;
+        padding: 10px;
+        text-align: center;
+        float: left;
+    }
+
+    #boxes .box img {
+        width: 75px;
+    }
+
+    #nav-open span {
+        cursor: pointer;
+        float: left;
+        margin-top: 5px;
+        color: #000000;
+        padding: 20px;
+    }
+
+    /* Side Bar*/
+
+    aside#sidebar {
+        float: left;
+        padding: 0px 0px 0px 10px;
+    }
+
+    aside#sidebar img {
+        text-align: center;
+        width: 185px;
+    }
+
+    #UI-Tools-List {
+        margin-bottom: 30px;
+    }
+
+    nav.UI-Tools-Nav {
+        position: absolute;
+        width: 100%;
+    }
+
+    /* Main-col*/
+
+    article#main-col {
+        width: 65%;
+        min-width: 100px;
+        float: right;
+    }
+
+    div#ColorOne.portfolio-body {
+        background-color: #3DEC98;
+        box-shadow: 4px 0 #3DEC98, -4px 0 #3DEC98, 0 -4px #3DEC98, 0 4px #3DEC98, 8px 0 #3DEC98, -8px 0 #3DEC98, 0 -8px #3DEC98, 0 8px #3DEC98, 0 0 0 4px #3DEC98;
+    }
+
+    p.text-label {
+        max-width: 76px;
+        min-width: 50px;
+        overflow: hidden;
+        image-rendering: pixelated;
+        cursor: default;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        overflow: hidden;
+    }
+
+    div.text-label {
+        max-width: 250px;
+        min-width: 250px;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        overflow: hidden;
+        image-rendering: pixelated;
+        cursor: default;
+        margin-left: auto;
+        margin-right: auto;
+        width: 960px;
+    }
+
+    .Planet-Info a {
+        text-decoration: none;
+        /* no underline */
+    }
+
+    .Planet-Info a:hover {
+        cursor: default;
+        color: #ffffff!important;
+        /* blue colors for links too */
+        text-decoration: inherit;
+        /* no underline */
+    }
+
+    #Show {
+        height: 39px;
+        width: 100px;
+        -webkit-appearance: none;
+        padding: 0px 1px;
+        background-color: #2fa1d6;
+        margin: 5px;
+        border-radius: 5px;
+        border-width: 0px;
+        font-family: PixelText;
+        font-size: 34px;
+        color: #ffffff;
+    }
+
+    #Refresh img {
+        transform: scale(2.0);
+    }
+
+    #Refresh {
+        image-rendering: pixelated;
+        /* transform: scale(3.0); */
+        /* border: none; */
+        background: none !important;
+        border: none;
+        /* z-index: 100; */
+        padding: 12px;
+        /* width: 55px; */
+        /* height: 77px; */
+    }
+
+    ul#UI-Tools-List {
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        color: white;
+        margin-right: 10px;
+    }
+
+    #Target {
+        image-rendering: pixelated;
+        transform: scale(3.5);
+        border: none;
+        background: none !important;
+        border: none;
+        padding: 0! important;
+        margin: 0;
+        display: inline-block;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        overflow: hidden;
+    }
+
+    #Target-Ui-Label {
+        image-rendering: pixelated;
+        transform: scale(3.5);
+        border: none;
+        background: none !important;
+        border: none;
+        padding: 0! important;
+        margin: 0;
+        display: inline-block;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        overflow: hidden;
+    }
+
+    article#main-col-proj {
+        width: 100%;
+    }
+
+    article#main-col-proj h1 {
+        text-align: center;
+    }
+
+    /*Resume */
+
+    article#main-col .page-title {
+        color: #000000;
+    }
+
+    div.card {
+        background-color: #ff6666;
+    }
+
+    ul#services li {
+        list-style: none;
+        padding: 2px;
+        margin-bottom: 1px;
+        background: #ffe680;
+    }
+
+    ul#collapsible {
+        float: left;
+    }
+
+    ul#services p {
+        width: auto;
+        display: inline-block;
+        background-color: #ff6666;
+        margin: 10px 5px 10px 5px;
+        font-size: 30px;
+    }
+
+    .h-75 {
+        height: 75px;
+    }
+
+    .panel-title a {
+        text-decoration: none;
+    }
+
+    nav img {
+        max-width: 75px;
+    }
+
+    nav hr {
+        width: 80%;
+    }
+
+    nav.Splash.Nav ul {
+        margin: 0;
+        padding: 0;
+        display: grid;
+        color: white;
+        margin-right: 10px;
+        height: 5%;
+    }
+
+    .panel-heading:hover {
+        color: #ffffff;
+        background-color: #e8491d;
+    }
+
+    .row .col.s6 {
+        width: auto!important;
+    }
+
+    .row {
+        margin: auto;
+    }
+
+    .row .col {
+        margin-left: 0px!important;
+        width: 100%;
+    }
+
+    .panel-collapse-clickable {
+        cursor: pointer;
+    }
+
+    .card ul li h3 {
+        margin: 0px;
+    }
+
+    footer {
+        color: #ffffff;
+        background-color: transparent;
+        bottom: 0;
+        width: 100%;
+        height: 30px;
+        position: absolute;
+        left: 0;
+    }
+
+    footer h6 {
+        padding: 1px;
+        /* font-weight: 400; */
+        line-height: 1.05;
+        /* width: 180px; */
+        margin-top: 5px;
+    }
+
+    /* Style the buttons inside the tab */
+
+    /* Create an active/current "tab button" class */
+
+    /* Style the tab content */
+
+    .tabcontent {
+        border-left: none;
+        background-color: #80bfff;
+        margin-top: 150px;
+    }
+
+    .tabcontent h3 {
+        margin: 0px 0px 0px 0px;
+        padding: 0px;
+        line-height: 1.01!important;
+        width: auto;
+    }
+
+    a.sLinks {
+        display: inline-block;
+        padding: 20px 15px;
+    }
+
+    a.sLinks img {
+        width: 45px;
+        image-rendering: pixelated;
+    }
+
+    .card .card-action {
+        padding: 10px 24px 0px 5px;
+    }
+
+    .dg .property-name {
+        width: 17%!important;
+    }
+
+    /*-----------------------------------------------------------------------------------*/
+
+    /*-----------------------------------------------------------------------------------*/
+
+    @media(max-width: 1080px) {
+        header #branding, header nav, header nav li, header .IconLink {
+            float: none;
+            text-align: center;
+            width: 100%;
+        }
+    }
+
+    /*-----------------------------------------------------------------------------------*/
+
+    /*-----------------------------------------------------------------------------------*/
+
+    @media(max-width: 870px) {
+        .container-body {
+            float: none;
+        }
+        .portfolio-body {
+            min-width: 0px;
+            float: none;
+            width: 85%;
+        }
+    }
+
+    /*-----------------------------------------------------------------------------------*/
+
+    /*-----------------------------------------------------------------------------------*/
+
+    @media(max-width: 768px) {
+        header #branding, header nav, header nav li, #boxes .box, article#main-col {
+            float: none;
+            width: 100%;
+            margin: auto;
+        }
+        .remove {
+            display: initial;
+        }
+        .moveGUI {
+            width: 100%!important;
+            right: 1.6em;
+        }
+        .dg .cr.number {
+            width: 100%!important;
+        }
+        .dg.main .close-button {
+            display: none;
+        }
+        .dg.ac {
+            position: fixed;
+            top: 14%!important;
+            left: 50%!important;
+            right: 5%!important;
+            height: 0;
+            z-index: 0;
+        }
+        h2, h3, h4, h5, h6 {
+            width: auto;
+        }
+        body {
+            height: 100%;
+        }
+        aside#sidebar {
+            width: 100%;
+            padding: 10px;
+            left: 150%;
+            margin: auto;
+            max-width: 205px;
+            float: none;
+        }
+        canvas {
+            overflow-x: hidden;
+            overflow-y: hidden;
+            overflow: hidden;
+        }
+        .row .col.s4 {
+            width: 85%;
+            display: inline-block;
+            float: none;
+        }
+        .tabcontent {
+            margin-top: 135px;
+        }
+        #webGL-container a {
+            font-size: 15px;
+            height: 15%;
+            text-align: center;
+            padding: 0px;
+            float: none;
+        }
+        div.text-label {
+            overflow-x: hidden!important;
+        }
+        #webGL-container a:hover {
+            font-size: 15px;
+            height: 15%;
+            text-align: center;
+            padding: 0px;
+            float: none;
+        }
+        nav ul li {
+            float: none;
+            padding: 0px;
+        }
+        section#main {
+            width: 100%;
+        }
+        .container-body {
+            width: 80%;
+            overflow: hidden;
+            min-width: 200px;
+        }
+        header .IconLink {
+            text-align: center;
+        }
+        #showcase h1 {
+            margin-top: 40px;
+        }
+    }
+
+    /*-----------------------------------------------------------------------------------*/
+
+    /*-----------------------------------------------------------------------------------*/
+
+    @media(max-width: 601px) {
+        .portfolio-body li {
+            float: none;
+        }
+        .waves-effect {
+            background-color: transparent;
+            width: 150px;
+            height: 100px;
+        }
+        article #port-main-col li {
+            float: none !important;
+        }
+    }
+
+    /*-----------------------------------------------------------------------------------*/
+
+    ul {
+        list-style-type: none;
+    }
+
+    /* The side navigation menu */
+
+    .sidenav {
+        height: 100%;
+        /* 100% Full-height */
+        width: 0;
+        /* 0 width - change this with JavaScript */
+        position: absolute;
+        /* Stay in place */
+        z-index: 1;
+        /* Stay on top */
+        top: 0;
+        left: 0;
+        background-color: #111;
+        /* Black*/
+        overflow-x: hidden;
+        /* Disable horizontal scroll */
+        padding-top: 60px;
+        /* Place content 60px from the top */
+        transition: 0.5s;
+        /* 0.5 second transition effect to slide in the sidenav */
+    }
+
+    /* The navigation menu links */
+
+    .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        color: #818181;
+        display: block;
+        transition: 0.3s
+    }
+
+    /* When you mouse over the navigation links, change their color */
+
+    .sidenav a:hover, .offcanvas a:focus {
+        color: #f1f1f1;
+    }
+
+    /* Position and style the close button (top right corner) */
+
+    .sidenav .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+
+    /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+
+    #main {
+        transition: margin-left .5s;
+        padding: 50px 50px 10px 50px;
+    }
+
+    /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+
+    @media screen and (max-height: 450px) {
+        .sidenav {
+            padding-top: 15px;
+        }
+        .sidenav a {
+            font-size: 18px;
+        }
+    }
+
+    @media (max-width:768px) {
+        .f-l {
+            float: left;
+        }
+        .flex {
+            display: inline-flex!important;
+        }
+        #Show {
+            font-size: 20px;
+            height: 39px;
+            width: 50px;
+        }
+        #webGL-container h1 a.heading {
+            font-size: 20px;
+        }
+        .Planet-Info {
+            float: left;
+            font-size: 20px !important;
+            line-height: 10px;
+            width: 80% !important;
+            position: absolute;
+            text-align: left;
+            width: 75%;
+            top: 55%!important;
+            left: 2%!important;
+        }
+        .b-25 {
+            bottom: 25%!important;
+        }
+        .section.group {
+            top: auto;
+            height: 35px;
+        }
+        #webGL-container h1 {
+            padding-left: 11px!important;
+            /* width: 100%; */
+            /* float: left; */
+            width: 0;
+            line-height: 1.2;
+            top: 0;
+        }
+        #webGL-container nav {
+            /* width: 100%; */
+            /* bottom: 0; */
+            top: 0;
+            /* left: 0; */
+            right: 0;
+        }
+        #webGL-container li {
+            padding: 0;
+            display: inline-block;
+            width: auto;
+        }
+        .t-0 {
+            width: 10%!important;
+            margin-top: 120px;
+            top: 0!important;
+            margin-left: 5px;
+        }
+        .top-override {
+            top: 0;
+            z-index: 1000;
+            bottom: 0;
+            margin-bottom: 50px;
+            width: 10%;
+        }
+        #webGL-container a {
+            font-size: 40px;
+        }
+    }
+
+    .w-100 {
+        width: 100%;
+    }
+
+    @media (max-width:375px) {
+        .h-adjust2
+        {
+            height: 190px!important;
+        }
+
+          .h-adjust3
+    {
+       height:  145px!important;
+    }
+
+        footer {
+            bottom: auto;
+        }
+        .t-0 {
+            width: auto;
+            margin-top: auto;
+            top: auto!important;
+            margin-left: auto;
+        }
+        .f-l {
+            float: none;
+        }
+        .top-override {
+            top: 0%!important;
+            z-index: 1000;
+            bottom: 0;
+            margin-bottom: 0px;
+            margin-top: 65px;
+            width: 100%!important;
+        }
+        .h-adjust {
+            height: 125px!important;
+        }
+        .remove {
+            display: initial;
+        }
+        .w-100 {
+            width: 100%;
+        }
+        div.Planet-Info {
+            top: 59%!important;
+            left: 1%!important;
+            width: 95%!important;
+        }
+        #webGL-container h1 {
+            padding-left: 0px!important;
+            /* width: 100%; */
+            /* float: left; */
+            width: auto;
+            line-height: 1.2;
+            /* top: 0; */
+        }
+        #webGL-container nav {
+            width: 100%;
+            bottom: 0;
+            top: auto;
+            line-height: 0;
+        }
+        h1 {
+            font-size: 25px;
+            font-weight: 1 !important;
+            line-height: 1.75;
+        }
+        nav.Splash.Nav ul {
+            display: inline-flex;
+            margin-right: 0px;
+        }
+    }
