@@ -85,7 +85,7 @@
 				</h1>
 			</div>
 			<!-- Main -->
-			<script type="text/javascript" src="js/main.js"></script>
+			<script type="text/javascript" src="js/hub.js"></script>
 			<!-- <a class="heading" href="index.html"><h1><span class="highlight">Gene</span> Space</h1></a> -->
 			<img id="i">
 		</div>

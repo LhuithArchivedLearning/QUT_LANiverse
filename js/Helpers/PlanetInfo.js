@@ -1,30 +1,42 @@
-var condition = 
+var condition = //Weather Conditions, now adjective to describe it
 [
     "Cold",
     "Dry",
     "Radioactive",
     "Hot",
     "Gluten Free",
-    "Moist",
     "Smelly",
-    "Habitable"
+    "Habitable",
+    "Volcanic",
+    "Active"
 ]
 
-var quantity =
+var quantity = //HOW harsh is the weather conditions
 [
     "Too",
     "Kinda",
     "Slighty",
     "Very",
     "Dangerously",
-    ""
+    "Way too",
+    "Relatively",
+    "Super",
+    "Mostly",
+    "Unbelievably",
+    "Extraordinarily"
 ]
 
 var adjective = 
 [
+    "Rich",
+    "Unkempt",
+    "Legendary",
+    "Dunk",
+    "Naturally Scented and Crisp",
+    "Crisp",
     "Amazing",
     "Lovely",
-    "pretty Bad",
+    "Pretty Bad",
     "Kinda Sassy",
     "Annoying",
     "Boring",
@@ -42,14 +54,15 @@ var adjective =
     "Stanky",
     "Tough",
     "Charasmatic",
-    "delightful",
-    "bad",
+    "Delightful",
+    "Bad",
     "Old",
     "Important",
     "By The Books",
     "Dank",          
     "Pretty",
     "Primitive",
+    "Primal",
     "Scary",
     "Delightful",
     "Tasty",
@@ -104,7 +117,30 @@ var adjective =
     "Funky",
     "Funky fresh",
     "Slippery",
-    "Moist"
+    "Moist",
+    "Tropical",
+    "Dead on the Inside",
+    "Defensive",
+    "Altruistic",
+    "Distant",
+    "Turbulent",
+    "Quiet",
+    "Idyllic",
+    "Sentient",
+    "Apathetic",
+    "Glorious",
+    "Diffrent",
+    "Strange",
+    "Mythical",
+    "Enticing",
+    "Unknown",
+    "Lively",
+    "Phenomenal",
+    "Husky",
+    "Dim",
+    "Well-nigh invisible",
+    "Marvelous",
+    "Undetectable"
 ]
 
 var discAdjective =
@@ -162,7 +198,6 @@ var discription =
     "Vegan Free",
     "Boasting the Only English Language Bookshop and Bar",
     "Home to the Toughest Bar in the World",
-    
 ]
 
 function BuildBio(size)
@@ -336,15 +371,17 @@ function BuildLifeForm(size)
             creature = lifeforms[ randomRangeRound(0, lifeforms.length - 1)]; 
             }
             else   
-            {
+            {   
                 creature = householdStuff[ randomRangeRound(0, householdStuff.length - 1)]; 
             }  
         }
         else 
         {
+        
             creature = word(randomRange(0, 27));
+            creature = creature.fontcolor('#59144f');
         }
-    
+      
         return ", " + intellgentlifeformTakeOverState[randomRangeRound(0, intellgentlifeformTakeOverState.length - 1)] 
         + " " +
          adjectiveFinal
@@ -386,7 +423,25 @@ var intellgentlifeformTakeOverState =
     "Run by",
     "Populated by",
     "Conquered by",
-    "inhabited by"
+    "inhabited by",
+    "Constructed by",
+    "Rented by",
+    "Relinquished by",
+    "Founded By",
+    "Drivin Mad by",
+    "Intouch with",
+    "being ruined by",
+    "Being mined by",
+    "Used as a dump by",
+    "Used as a movie prop by",
+    "being rode on by",
+    "Who is One With",
+    "Used as a toilet by",
+    "a Sanctuary for",
+    "a Prison for",
+    "a Food for",
+    "a Toilet for",
+    "a Final Resting Spot for",
 ]
 
 var creaturethats =
@@ -445,7 +500,7 @@ var creatureAres =
     "ruled by a Mad King",
     "always angry, thats there secret",
     "EVIL!!!!",
-    "Good",
+    "the good guys",
     "fighting evil",
     "our last hope",
     "our only hope",
@@ -453,7 +508,13 @@ var creatureAres =
     "always hangry",
     "always on time",
     "always going on about the weather",
-    "wazirds",
+    "Wizards",
+    "Going For Gold Son!",
+    "upto no good",
+    "Always up for a good fight",
+    "really into reading books",
+    "good at tennis",
+
 ]
 
 var creatureWills =
@@ -461,6 +522,9 @@ var creatureWills =
     "have what shes having",
     "have whatever his smokin",
     "burn them all",
+    "always finish a meal",
+    "open a door for someone",
+    "never fart in an elevator"
     
 ]
 
@@ -521,7 +585,7 @@ var creatureAdjectives =
     "Buff",
     "Tough",
     "subterranean",
-    "aquitic",
+    "Aquitic",
     "Book Smart",
     "Savvy",
     "Flamboyant",
@@ -529,6 +593,9 @@ var creatureAdjectives =
     "Fire-Proof",
     "Water-Resistant",
     "Gross",
+    "Nomadic",
+    "Farty",
+    ""
 
 ]
 

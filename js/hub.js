@@ -6,15 +6,7 @@ var lightpos, dirLight, angle;
 // Custom global variables
 var mouse = { x: 0, y: 0 };
 var resolution = 3;
-var octaves;
-var persistance;
-var lacunarity;
-var seed = 1;
-var noiseScale;
-var offset = { x: 0, y: 0 };
-var textureSize = 256;
-var mouseDown = false;
-var boxsize = 25;
+
 var skyboxuniforms;
 var textureList = [];
 var moonListsize = 0;
@@ -311,50 +303,50 @@ function onWindowResize() {
 }
 
 function animate() {
-    var delta = clock.getDelta();
-    timer = timer + delta;
-
-    if (timer >= timeLimit) {
-        //  if (ShaderLoadList.planet.vertex == undefined) {
-        //      ShaderLoader('js/Shaders/Planet/Planet.vs.glsl',
-        //          'js/Shaders/Planet/Planet.fs.glsl', setUpPlanet, false);
-        //  }
-        //  else {
-        //      createPlanet(false, ShaderLoadList.planet.vertex, ShaderLoadList.planet.fragment);
-        //  }
-
-        timer = 0;
-    }
-
-    angle += 0.1;
-
-    dirLight.position.set(controls.xPos, controls.yPos, controls.zPos);
-
-    if (planet !== undefined) {
-        dirLight.lookAt(planet.position);
-        var elapsedMilliseconds = Date.now() - startTime;
-        var elapsedSeconds = elapsedMilliseconds / 1000.;
-
-        if (skyboxuniforms !== undefined)
-            skyboxuniforms.time.value = 60. * elapsedSeconds;
-        PlanetRotation(planet, planetRotationPeriod, planetTilt, delta);
-        //planetText.updatePosition(planetSize - 20, - planetText.element.clientWidth / 2, 75);
-    }
-
-    if (ringsList !== undefined) {
-        for (var i = 0; i < ringsList.length; i++) {
-            RingOrbit(ringsList[i], ringsList[i].Ring, new THREE.Vector3(0, 0, 0),
-                clock.getElapsedTime(), 1000, 24, delta);
-        }
-    }
-
-    MoonsUpdate(clock.getDelta());
+    //var delta = clock.getDelta();
+    //timer = timer + delta;
+//
+    //if (timer >= timeLimit) {
+    //    //  if (ShaderLoadList.planet.vertex == undefined) {
+    //    //      ShaderLoader('js/Shaders/Planet/Planet.vs.glsl',
+    //    //          'js/Shaders/Planet/Planet.fs.glsl', setUpPlanet, false);
+    //    //  }
+    //    //  else {
+    //    //      createPlanet(false, ShaderLoadList.planet.vertex, ShaderLoadList.planet.fragment);
+    //    //  }
+//
+    //    timer = 0;
+    //}
+//
+    //angle += 0.1;
+//
+    //dirLight.position.set(controls.xPos, controls.yPos, controls.zPos);
+//
+    //if (planet !== undefined) {
+    //    dirLight.lookAt(planet.position);
+    //    var elapsedMilliseconds = Date.now() - startTime;
+    //    var elapsedSeconds = elapsedMilliseconds / 1000.;
+//
+    //    if (skyboxuniforms !== undefined)
+    //        skyboxuniforms.time.value = 60. * elapsedSeconds;
+    //    PlanetRotation(planet, planetRotationPeriod, planetTilt, delta);
+    //    //planetText.updatePosition(planetSize - 20, - planetText.element.clientWidth / 2, 75);
+    //}
+//
+    //if (ringsList !== undefined) {
+    //    for (var i = 0; i < ringsList.length; i++) {
+    //        RingOrbit(ringsList[i], ringsList[i].Ring, new THREE.Vector3(0, 0, 0),
+    //            clock.getElapsedTime(), 1000, 24, delta);
+    //    }
+    //}
+//
+    //MoonsUpdate(clock.getDelta());
     requestAnimationFrame(animate);
-    HandleCursor();
-    input();
+    //HandleCursor();
+    //input();
     render();
-    ShowHideInfo();
-    updateTargetBox();
+    //ShowHideInfo();
+    //updateTargetBox();
 }
 
 function manageMoonOrbits(orbit) {
@@ -548,66 +540,66 @@ function MouseDown(event) {
 };
 
 function CalculateParametres(vertex_text, fragment_text) {
-    persistance = randomRange(0.65, 0.85);
-    lacunarity = randomRange(1.9, 2.2);
-    octaves = Math.round(randomRange(4, 6));
-    noiseScale = randomRange(10, 200);
-    moonListsize = Math.round(randomRange(1, 4))
-    ringlistsize = Math.round(randomRange(1, 4));
-    moonList = new Array(moonListsize);
-    planetTilt = randomRange(-55, 55);
-    planetSize = randomRange(40, 110);
-    planetRotationPeriod = Math.round(randomRange(65, 100));
-    InitializeMoonData(moonList, vertex_text, fragment_text);
+    //persistance = randomRange(0.65, 0.85);
+    //lacunarity = randomRange(1.9, 2.2);
+   // octaves = Math.round(randomRange(4, 6));
+    //noiseScale = randomRange(10, 200);
+    //moonListsize = Math.round(randomRange(1, 4))
+    //ringlistsize = Math.round(randomRange(1, 4));
+    //moonList = new Array(moonListsize);
+    //planetTilt = randomRange(-55, 55);
+    //planetSize = randomRange(40, 110);
+    //planetRotationPeriod = Math.round(randomRange(65, 100));
+   // InitializeMoonData(moonList, vertex_text, fragment_text);
 }
 
 function setUpRings(colors, vertex_text, fragment_text) {
-
-    if (ringsList !== undefined) {
-
-        for (var i = 0; i < ringsList.length; i++) {
-            MainScene.remove(ringsList[i].orbitObject);
-            MainScene.remove(ringsList[i].Ring);
-            doDispose(ringsList[i].Ring);
-        }
-    }
-
-    ShaderLoadList.asto.vertex = vertex_text;
-    ShaderLoadList.asto.fragment = fragment_text;
-    
-
-    ringsList = new Array(ringlistsize);
-
-    var index = randomRangeRound(1, ColorPalletes.length - 1);
-    AstoColorPalleteGrab = colors;
-
-    InitializeRingsData(ringsList);
-
-    if (ringsList !== undefined) {
-        for (var i = 0; i < ringsList.length; i++) {
-
-            if (!ringsList[i].isFlat) {
-                CreateRockyBelt(ringsList[i], new THREE.Vector3(0, 0, 0), clock.getElapsedTime(),
-                    1000, ringsList[i].NumAstros, ringsList[i].Ring,
-                    vertex_text, fragment_text, dirLight.position,
-                    ringsList[i].astoList, AstoColorPalleteGrab);
-            }
-            else {
-                if (ShaderLoadList.ring.vertex == undefined) {
-                    ShaderLoader('js/Shaders/Ring/Ring.vs.glsl',
-                        'js/Shaders/Ring/Ring.fs.glsl', SetUpFlatBelt, { data: ringsList[i], Ringcolors: AstoColorPalleteGrab });
-                }
-                else {
-                    CreateFlatBelt({ data: ringsList[i], Ringcolors: AstoColorPalleteGrab },
-                        ShaderLoadList.ring.vertex, ShaderLoadList.ring.fragment);
-                }
-            }
-
-            MainScene.add(ringsList[i].Ring);
-        }
-
-        UpdateLook();
-    }
+//
+   // if (ringsList !== undefined) {
+//
+   //     for (var i = 0; i < ringsList.length; i++) {
+   //         MainScene.remove(ringsList[i].orbitObject);
+   //         MainScene.remove(ringsList[i].Ring);
+   //         doDispose(ringsList[i].Ring);
+   //     }
+   // }
+//
+   // ShaderLoadList.asto.vertex = vertex_text;
+   // ShaderLoadList.asto.fragment = fragment_text;
+   // 
+//
+   // ringsList = new Array(ringlistsize);
+//
+   // var index = randomRangeRound(1, ColorPalletes.length - 1);
+   // AstoColorPalleteGrab = colors;
+//
+   // InitializeRingsData(ringsList);
+//
+   // if (ringsList !== undefined) {
+   //     for (var i = 0; i < ringsList.length; i++) {
+//
+   //         if (!ringsList[i].isFlat) {
+   //             CreateRockyBelt(ringsList[i], new THREE.Vector3(0, 0, 0), clock.getElapsedTime(),
+   //                 1000, ringsList[i].NumAstros, ringsList[i].Ring,
+   //                 vertex_text, fragment_text, dirLight.position,
+   //                 ringsList[i].astoList, AstoColorPalleteGrab);
+   //         }
+   //         else {
+   //             if (ShaderLoadList.ring.vertex == undefined) {
+   //                 ShaderLoader('js/Shaders/Ring/Ring.vs.glsl',
+   //                     'js/Shaders/Ring/Ring.fs.glsl', SetUpFlatBelt, { data: ringsList[i], Ringcolors: AstoColorPalleteGrab });
+   //             }
+   //             else {
+   //                 CreateFlatBelt({ data: ringsList[i], Ringcolors: AstoColorPalleteGrab },
+   //                     ShaderLoadList.ring.vertex, ShaderLoadList.ring.fragment);
+   //             }
+   //         }
+//
+   //         MainScene.add(ringsList[i].Ring);
+   //     }
+//
+   //     UpdateLook();
+   // }
 }
 
 function CreateFlatBelt(ringData, vertex_text, fragment_text) {
@@ -879,7 +871,7 @@ function RemoveOldShizz() {
     }
 }
 
-function createPlanet(start, vertex_text, fragment_text) {
+function fetchPlanet(start, vertex_text, fragment_text) {
 
     if (planet !== undefined) {
         RemoveOldShizz();
@@ -887,7 +879,7 @@ function createPlanet(start, vertex_text, fragment_text) {
     else {
         var vertex = vertex_text;
         var fragment = fragment_text;
-        var ico = new THREE.IcosahedronGeometry(planetSize, 4);
+        //var ico = new THREE.IcosahedronGeometry(planetSize, 4);
 
         PlanetMaterial = new THREE.ShaderMaterial({
             uniforms: THREE.UniformsUtils.merge([
@@ -904,154 +896,120 @@ function createPlanet(start, vertex_text, fragment_text) {
             , "110px", -1000, "", "Ui-Label", "Show");
     }
 
-    CalculateParametres(vertex_text, fragment_text);
+    //CalculateParametres(vertex_text, fragment_text);
 
-    planetData = createPlantiodData(octaves, persistance, lacunarity,
-        seed, noiseScale, offset, textureSize);
+    //planetData = createPlantiodData(octaves, persistance, lacunarity,
+    //    seed, noiseScale, offset, textureSize);
     //Custom image mapping addtion
     //maybe find a smarter way to do this :s
     //regions, url, size, planet, vertex_text, fragment_text
-    var cube = new THREE.CubeGeometry(200, 200, 200);
-    var ico = new THREE.IcosahedronGeometry(planetSize, 4);
+    //var cube = new THREE.CubeGeometry(200, 200, 200);
+    //var ico = new THREE.IcosahedronGeometry(planetSize, 4);
 
-    planet = new THREE.Mesh(cube,
-        PlanetMaterial);
-    planet.castShadow = true; //default is false
-    planet.receiveShadow = true; //default
+   // planet = new THREE.Mesh(cube,
+   //..     PlanetMaterial);
+   // planet.castShadow = true; //default is false
+    //planet.receiveShadow = true; //default
 
+   var texterLoader = new THREE.TextureLoader();
+   var planetMap = texterLoader.load("planetimgs/Bbynrd-435.png");
+   
+   var loader = new THREE.OBJLoader();
+   ///var planetObj = loader.load("objects/Bbynrd-435.obj");
 
-    if (planetData.url == '') {
-        planet = new THREE.Mesh(ico,
-            PlanetMaterial);
+   //planet = new THREE.Mesh(planetObj, PlanetMaterial);
+   //planet.castShadow = true; //default is false
+   //planet.receiveShadow = true; //default
+   //MainScene.add(planet);
+
+   PlanetMaterial.uniforms.texture.value = planetMap.image;//"planetimg/Bbynrd-435.png" //planetData.map;
+   // console.log(planetMap);
+    // load a resource
+    loader.load(
+	// resource URL
+	'objects/Bbynrd-435.obj',
+	// called when resource is loaded
+	function ( object ) {
+
+        planet = new THREE.Mesh(object.mesh, PlanetMaterial);
         planet.castShadow = true; //default is false
         planet.receiveShadow = true; //default
         MainScene.add(planet);
 
-        PlanetMaterial.uniforms.texture.value = planetData.map;
-    }
-    else {
-        var customData = {
-            region: planetData.regionsInfo, size: textureSize, mat: PlanetMaterial,
-            vert: vertex_text, frag: fragment_text
-        };
-        CustomTextureLoader(planetData.url, customData, SetupTextureFunction);
-    }
-    dirLight.target = planet;
+	},
+	// called when loading is in progresses
+	function ( xhr ) {
+
+		console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+	},
+	// called when loading has errors
+	function ( error ) {
+
+		console.log( 'An error happened' );
+
+	}
+);
+
+    //if (planetData.url == '') {
+//
+    //}
+    //else {
+    //    var customData = {
+    //        region: planetData.regionsInfo, size: textureSize, mat: PlanetMaterial,
+    //        vert: vertex_text, frag: fragment_text
+    //    };
+    //    CustomTextureLoader(planetData.url, customData, SetupTextureFunction);
+   // }
+    //dirLight.target = planet;
     //planetData.regionsInfo, planetData.url, 
     //textureSize, planet, vertex_text, fragment_text
 
     //planetText = generateName(planet, 55, -1000, false);
 
-    if (ShaderLoadList.atmo.vertex == undefined) {
-        ShaderLoader('js/Shaders/Atmo/AtmoShader.vs.glsl',
-            'js/Shaders/Atmo/AtmoShader.fs.glsl', setUpAtmosphere, planetData.colors);
-    }
-    else {
-        createAtmos(planetData.colors, ShaderLoadList.atmo.vertex, ShaderLoadList.atmo.fragment);
-    }
+    //if (ShaderLoadList.atmo.vertex == undefined) {
+    //    ShaderLoader('js/Shaders/Atmo/AtmoShader.vs.glsl',
+    //        'js/Shaders/Atmo/AtmoShader.fs.glsl', setUpAtmosphere, planetData.colors);
+    //}
+    //else {
+        //createAtmos(planetData.colors, ShaderLoadList.atmo.vertex, ShaderLoadList.atmo.fragment);
+    //}
 
-    for (var i = 0; i < moonList.length; i++) {
-        moonList[i].moonOrbit = DrawOrbit(moonList[i], new THREE.Vector3(0, 0, 0),
-            clock.getElapsedTime(), 1000, planetData.colors, i, moonList.length);
-        MainScene.add(moonList[i].moonObject);
-
-        if (moonList[i].moonOrbit != 0)
-            MainScene.add(moonList[i].moonOrbit);
-
-        moonList[i].text = generateName(moonList[i].moonObject, "35px", -1000, false);// generateName(planet, "35px", -1000);
-    }
-
-    var roll = randomRange(0, 10);
-
-    if (roll >= 5) {
-        hasRings = true;
-
-        if (ShaderLoadList.asto.vertex == undefined) {
-            ShaderLoader('js/Shaders/Asto/Asto.vs.glsl',
-                'js/Shaders/Asto/Asto.fs.glsl', setUpRings, planetData.colors);
-        }
-        else {
-            setUpRings(planetData.colors, ShaderLoadList.asto.vertex, ShaderLoadList.asto.fragment);
-        }
-    }
-    else {
-        hasRings = false;
-    }
-
-    planetTextInfo = generateName(planet, 1, -1000, true, planetData.colors, planetData.regionsInfo);
-    planetTextInfo.setWidthbyPercent(75);
-    planetTextInfo.setHeight(planetSize);
-    // targetPoint.object = moonList[0].moonObject;
-    //targetPoint.size = 0.75;
-
-
-    //Save PLanet Information
-    PostPLanetInformation(planetData.map, planet);
-}
-
-function PostPLanetInformation(map, planetobject) {
-    // create off-screen canvas element
-    var canvastest = document.createElement('canvas'),
-    ctx = canvastest.getContext('2d');
-    document.getElementById("foot").appendChild(canvastest);
-
-    canvastest.width = 256;
-    canvastest.height = 256;
-
-    // create imageData object
-    var idata = ctx.createImageData(256, 256);
-
-    // set our buffer as source
-    idata.data.set(map.image.data);
-
-    // update canvas with new data
-    ctx.putImageData(idata, 0, 0);
-    var dataUri = canvastest.toDataURL('image/png'); // produces a PNG file
-    var planetObjectData = export_object(planetobject);
-
-    console.log(planetObjectData);
-    $.ajax({
-        type: 'POST',
-        url: '/planet_post.php',
-        data: {
-            name: planetName, texture_00_url: "Test_Url", size: planetSize, Tilt: planetTilt,
-            RotationPeriod: planetRotationPeriod, numMoons: moonListsize, numRings: (hasRings) ? ringlistsize : 0, texture_00:dataUri, object:planetObjectData
-        },
-    });
-
-    //if(hasRings){
-    //    if(ringsList !== undefined)
-    //    {
-    //        if(ringsList[0].isFlat)
-    //            export_object(ringsList[0].Ring);
+    //for (var i = 0; i < moonList.length; i++) {
+    //    moonList[i].moonOrbit = DrawOrbit(moonList[i], new THREE.Vector3(0, 0, 0),
+    //        clock.getElapsedTime(), 1000, planetData.colors, i, moonList.length);
+    //    MainScene.add(moonList[i].moonObject);
+//
+    //    if (moonList[i].moonOrbit != 0)
+    //        MainScene.add(moonList[i].moonOrbit);
+//
+    //    moonList[i].text = generateName(moonList[i].moonObject, "35px", -1000, false);// generateName(planet, "35px", -1000);
+    //}
+//
+    //var roll = randomRange(0, 10);
+//
+    //if (roll >= 5) {
+    //    hasRings = true;
+//
+    //    if (ShaderLoadList.asto.vertex == undefined) {
+    //        ShaderLoader('js/Shaders/Asto/Asto.vs.glsl',
+    //            'js/Shaders/Asto/Asto.fs.glsl', setUpRings, planetData.colors);
+    //    }
+    //    else {
+    //        setUpRings(planetData.colors, ShaderLoadList.asto.vertex, ShaderLoadList.asto.fragment);
     //    }
     //}
+    //else {
+    //    hasRings = false;
+    //}
+//
+    //planetTextInfo = generateName(planet, 1, -1000, true, planetData.colors, planetData.regionsInfo);
+    //planetTextInfo.setWidthbyPercent(75);
+    //planetTextInfo.setHeight(planetSize);
+    // targetPoint.object = moonList[0].moonObject;
+    //targetPoint.size = 0.75;
 }
 
-function export_object(object){
-
-    var exporter = new THREE.OBJExporter();
-    var data = exporter.parse(object);
-    return data;
-}
-
-function download(data, filename, type) {
-    var file = new Blob([data], {type: type});
-    if (window.navigator.msSaveOrOpenBlob) // IE10+
-        window.navigator.msSaveOrOpenBlob(file, filename);
-    else { // Others
-        var a = document.createElement("a"),
-                url = URL.createObjectURL(file);
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function() {
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);  
-        }, 0); 
-    }
-}
 
 function doDispose(obj) {
     if (obj !== null) {
@@ -1074,35 +1032,38 @@ function doDispose(obj) {
     obj = undefined;
 };
 
-function createMoon(moonSize, mat) {
-    var moon = new THREE.Mesh(new THREE.IcosahedronGeometry(moonSize, 2), mat);
-    moon.castShadow = true; //default is false
-    moon.receiveShadow = true; //default+
-    return moon;
+function fetchmoon(moonSize, mat) {
+    //var moon = new THREE.Mesh(new THREE.IcosahedronGeometry(moonSize, 2), mat);
+    //moon.castShadow = true; //default is false
+    //moon.receiveShadow = true; //default+
+    //return moon;
 }
 
-function createPlantiodData(octaves, persistance, lacunarity, seed, noiseScale, offset, size) {
-    var planetInfo = new MapGenerator(octaves, persistance, lacunarity,
-        seed, noiseScale, offset, size, false);
+function fetchPlanatiodData(){
 
-    var dataTexture;
-
-    dataTexture = new THREE.DataTexture
-        (
-        Uint8Array.from(planetInfo.map),
-        size,
-        size,
-        THREE.RGBFormat,
-        THREE.UnsignedByteType,
-        );
-
-    dataTexture.needsUpdate = true;
-    textureList.push(dataTexture);
-
-    return new PlanetInformation(dataTexture, planetInfo.hasAtmo,
-        planetInfo.hasLiquad, planetInfo.colors, planetInfo.url,
-        planetInfo.regionsInfo);
 }
+//function createPlantiodData(octaves, persistance, lacunarity, seed, noiseScale, offset, size) {
+//    var planetInfo = new MapGenerator(octaves, persistance, lacunarity,
+//        seed, noiseScale, offset, size, false);
+//
+//    var dataTexture;
+//
+//    dataTexture = new THREE.DataTexture
+//        (
+//        Uint8Array.from(planetInfo.map),
+//        size,
+//        size,
+//        THREE.RGBFormat,
+//        THREE.UnsignedByteType,
+//        );
+//
+//    dataTexture.needsUpdate = true;
+//    textureList.push(dataTexture);
+//
+//    return new PlanetInformation(dataTexture, planetInfo.hasAtmo,
+//        planetInfo.hasLiquad, planetInfo.colors, planetInfo.url,
+//        planetInfo.regionsInfo);
+//}
 
 function generateButtonUi(parent, fontsize, left, url, classname, id) {
 
@@ -1133,7 +1094,7 @@ function generateButtonUi(parent, fontsize, left, url, classname, id) {
                     'js/Shaders/Planet/Planet.fs.glsl', setUpPlanet, false);
             }
             else {
-                createPlanet(false, ShaderLoadList.planet.vertex, ShaderLoadList.planet.fragment);
+                fetchPlanet(false, ShaderLoadList.planet.vertex, ShaderLoadList.planet.fragment);
             }
         };
     }
@@ -1255,7 +1216,7 @@ function ShaderLoader(vertex_url, fragment_url, onLoad, Custom, onProgress, onEr
 function setUpPlanet(init, vertex_text, fragment_text) {
     ShaderLoadList.planet.vertex = vertex_text;
     ShaderLoadList.planet.fragment = fragment_text;
-    createPlanet(init, vertex_text, fragment_text);
+    fetchPlanet(init, vertex_text, fragment_text);
 }
 
 function setUpAtmosphere(atmoInfo, vertex_text, fragment_text) {

@@ -1,1 +1,2 @@
+php_value allow_url_fopen On
 AddType application/x-httpd-php7 .html .htm

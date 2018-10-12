@@ -160,7 +160,6 @@ function orbit(planet, object, centre, currTimeD, auScale, deltaTimeD) {
 
     // Calculate and apply the appropriate axis tilt to the bodies
     // and rotate them around the axis
-
     var radians = planet["tilt"] * Math.PI / 180; // tilt in radians
     object.rotation.order = 'ZXY';
     object.rotation.x = 0;
@@ -169,9 +168,7 @@ function orbit(planet, object, centre, currTimeD, auScale, deltaTimeD) {
 
 }
 
-
 function RingOrbit(ringData, ringObject, centre, currTimeD, auScale, numAstos, deltaTimed) {
-
     // Calculate and apply the appropriate axis tilt to the bodies
     // and rotate them around the axis
     var radians = ringData["tilt"] * Math.PI / 180; // tilt in radians
@@ -181,8 +178,6 @@ function RingOrbit(ringData, ringObject, centre, currTimeD, auScale, numAstos, d
     ringObject.rotation.z = radians;
 
 }
-
-
 
 function getOrbit(ringData) {
 
@@ -194,10 +189,7 @@ function getOrbit(ringData) {
 
 }
 
-
-
 function PlanetRotation(Planet, period, tilt, deltaTimeD) {
-
     // Calculate and apply the appropriate axis tilt to the bodies
     // and rotate them around the axis
     var radians = tilt * Math.PI / 180; // tilt in radians
@@ -207,8 +199,6 @@ function PlanetRotation(Planet, period, tilt, deltaTimeD) {
     Planet.rotation.z = radians;
 
 }
-
-
 
 THREE.Object3D.prototype.worldToLocal = function (vector) {
     if (!this.__inverseMatrixWorld) this.__inverseMatrixWorld = new THREE.Matrix4();
