@@ -9,7 +9,7 @@
 	<meta name="author" content="Eugene Martens">
 	<link rel="shortcut icon" type="image/png" href="img/Icons/favicon.ico">
 
-	<title>Gene Space | Oh Hey</title>
+	<title>LANIVERSE - HUB</title>
 	<link rel="stylesheet" href="./css/style.css">
 	<script>
 		(function (i, s, o, g, r, a, m) {
@@ -28,14 +28,14 @@
 	
 
 	<!-- Three JS -->
-	<script type="text/javascript" src="js/THREE/three.min.js"></script>
+	<script src="./three.js webgl - gltf exporter_files/three.js.download"></script>
 
 	<script type="text/javascript" src="js/THREE/CanvasRenderer.js"></script>
 	<script type="text/javascript" src="js/THREE/OrbitControls.js"></script>
 	<script type="text/javascript" src="js/THREE/WorldData.js"></script>
 	<script type="text/javascript" src="js/THREE/Gyroscope.js"></script>
 	<script type="text/javascript" src="js/THREE/OBJLoader.js"></script>
-	<script type="text/javascript" src="js/THREE/OBJExporter.js"></script>
+	<script type="text/javascript" src="js/THREE/GLTFLoader.js"></script>
 
 	<!--Post Processing Stuff -->
 	<script type="text/javascript" src="js/THREE/EffectComposer.js"></script>
@@ -80,8 +80,7 @@
 			<!-- Main -->
 			<div id="heading-Container" class="w-100">
 				<h1>
-					<a class="heading">
-						<span class="highlight">LAN</span>-iverse </a>
+					<a class="heading">HUB</a>
 				</h1>
 			</div>
 			<!-- Main -->

@@ -28,14 +28,16 @@
 	
 
 	<!-- Three JS -->
-	<script type="text/javascript" src="js/THREE/three.min.js"></script>
-
+	<!--<script type="text/javascript" src="js/THREE/three.min.js"></script> -->
+	
+	<script src="./three.js webgl - gltf exporter_files/three.js.download"></script>
 	<script type="text/javascript" src="js/THREE/CanvasRenderer.js"></script>
 	<script type="text/javascript" src="js/THREE/OrbitControls.js"></script>
 	<script type="text/javascript" src="js/THREE/WorldData.js"></script>
 	<script type="text/javascript" src="js/THREE/Gyroscope.js"></script>
-	<script type="text/javascript" src="js/THREE/OBJLoader.js"></script>
 	<script type="text/javascript" src="js/THREE/OBJExporter.js"></script>
+	<script type="text/javascript" src="js/THREE/GLTFExporter.js"></script>
+	<script type="text/javascript" src="js/THREE/WebGL.js"></script>
 
 	<!--Post Processing Stuff -->
 	<script type="text/javascript" src="js/THREE/EffectComposer.js"></script>

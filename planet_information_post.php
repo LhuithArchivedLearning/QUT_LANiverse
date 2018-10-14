@@ -8,7 +8,6 @@ $Tilt = $_POST['Tilt'];
 $RotationPeriod = $_POST['RotationPeriod'];
 $numMoons = $_POST['numMoons'];
 $numRings = $_POST['numRings'];
-$object = $_POST['object'];
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -25,12 +24,6 @@ $sql = "INSERT INTO Planetoid (planetname, texture_00_url, size, planetTilt, pla
     VALUES ('$name', '$texture_00_url', '$size', '$Tilt', '$RotationPeriod', '$numMoons', '$numRings')";
 
 file_put_contents('planetimgs/'.$name.'.png', file_get_contents($texture_00));
-
-$fh = fopen('objects/'.$name.'.obj',"a");
-fwrite($fh,($object."\r\n")); // add newline for next time
-fclose($fh);
-
-//file_put_contents('objects/'.$name.'.txt', file_get_contents($object));
 
 if ($conn->query($sql) === TRUE) {
     echo "document.getElementById('echo').innerHTML = 'Fart'";

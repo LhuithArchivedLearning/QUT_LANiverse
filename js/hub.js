@@ -14,8 +14,8 @@ var ringlistsize = 0;
 
 var planetSize, planetData, inPlanet, planet,
     planetText, planetTextInfo, atmoMaterial, planetTilt, hasRings,
-    PlanetMaterial, moonList, ringsList , outline, planetObject,
-    atmo, planetRotationPeriod, planetSelected, planetName;
+    PlanetMaterial, moonList, ringsList, outline, planetObject,
+    atmo, planetRotationPeriod, planetSelected, planetName, loadedOBJ;
 
 var targetPoint = { object: new THREE.Object3D(), size: 0 };
 
@@ -303,30 +303,30 @@ function onWindowResize() {
 }
 
 function animate() {
-    //var delta = clock.getDelta();
-    //timer = timer + delta;
-//
-    //if (timer >= timeLimit) {
-    //    //  if (ShaderLoadList.planet.vertex == undefined) {
-    //    //      ShaderLoader('js/Shaders/Planet/Planet.vs.glsl',
-    //    //          'js/Shaders/Planet/Planet.fs.glsl', setUpPlanet, false);
-    //    //  }
-    //    //  else {
-    //    //      createPlanet(false, ShaderLoadList.planet.vertex, ShaderLoadList.planet.fragment);
-    //    //  }
-//
-    //    timer = 0;
-    //}
-//
-    //angle += 0.1;
-//
-    //dirLight.position.set(controls.xPos, controls.yPos, controls.zPos);
-//
+    var delta = clock.getDelta();
+    timer = timer + delta;
+    
+    if (timer >= timeLimit) {
+        //  if (ShaderLoadList.planet.vertex == undefined) {
+        //      ShaderLoader('js/Shaders/Planet/Planet.vs.glsl',
+        //          'js/Shaders/Planet/Planet.fs.glsl', setUpPlanet, false);
+        //  }
+        //  else {
+        //      createPlanet(false, ShaderLoadList.planet.vertex, ShaderLoadList.planet.fragment);
+        //  }
+    
+        timer = 0;
+    }
+    
+    angle += 0.1;
+    
+    dirLight.position.set(controls.xPos, controls.yPos, controls.zPos);
+   
     //if (planet !== undefined) {
     //    dirLight.lookAt(planet.position);
     //    var elapsedMilliseconds = Date.now() - startTime;
     //    var elapsedSeconds = elapsedMilliseconds / 1000.;
-//
+    //
     //    if (skyboxuniforms !== undefined)
     //        skyboxuniforms.time.value = 60. * elapsedSeconds;
     //    PlanetRotation(planet, planetRotationPeriod, planetTilt, delta);
@@ -339,7 +339,7 @@ function animate() {
     //            clock.getElapsedTime(), 1000, 24, delta);
     //    }
     //}
-//
+
     //MoonsUpdate(clock.getDelta());
     requestAnimationFrame(animate);
     //HandleCursor();
@@ -539,67 +539,21 @@ function MouseDown(event) {
 
 };
 
-function CalculateParametres(vertex_text, fragment_text) {
-    //persistance = randomRange(0.65, 0.85);
-    //lacunarity = randomRange(1.9, 2.2);
-   // octaves = Math.round(randomRange(4, 6));
-    //noiseScale = randomRange(10, 200);
+function Fetch_Parametres(vertex_text, fragment_text) {
     //moonListsize = Math.round(randomRange(1, 4))
     //ringlistsize = Math.round(randomRange(1, 4));
     //moonList = new Array(moonListsize);
     //planetTilt = randomRange(-55, 55);
-    //planetSize = randomRange(40, 110);
+    planetSize = randomRange(40, 110);
     //planetRotationPeriod = Math.round(randomRange(65, 100));
-   // InitializeMoonData(moonList, vertex_text, fragment_text);
+    // InitializeMoonData(moonList, vertex_text, fragment_text);
 }
 
-function setUpRings(colors, vertex_text, fragment_text) {
-//
-   // if (ringsList !== undefined) {
-//
-   //     for (var i = 0; i < ringsList.length; i++) {
-   //         MainScene.remove(ringsList[i].orbitObject);
-   //         MainScene.remove(ringsList[i].Ring);
-   //         doDispose(ringsList[i].Ring);
-   //     }
-   // }
-//
-   // ShaderLoadList.asto.vertex = vertex_text;
-   // ShaderLoadList.asto.fragment = fragment_text;
-   // 
-//
-   // ringsList = new Array(ringlistsize);
-//
-   // var index = randomRangeRound(1, ColorPalletes.length - 1);
-   // AstoColorPalleteGrab = colors;
-//
-   // InitializeRingsData(ringsList);
-//
-   // if (ringsList !== undefined) {
-   //     for (var i = 0; i < ringsList.length; i++) {
-//
-   //         if (!ringsList[i].isFlat) {
-   //             CreateRockyBelt(ringsList[i], new THREE.Vector3(0, 0, 0), clock.getElapsedTime(),
-   //                 1000, ringsList[i].NumAstros, ringsList[i].Ring,
-   //                 vertex_text, fragment_text, dirLight.position,
-   //                 ringsList[i].astoList, AstoColorPalleteGrab);
-   //         }
-   //         else {
-   //             if (ShaderLoadList.ring.vertex == undefined) {
-   //                 ShaderLoader('js/Shaders/Ring/Ring.vs.glsl',
-   //                     'js/Shaders/Ring/Ring.fs.glsl', SetUpFlatBelt, { data: ringsList[i], Ringcolors: AstoColorPalleteGrab });
-   //             }
-   //             else {
-   //                 CreateFlatBelt({ data: ringsList[i], Ringcolors: AstoColorPalleteGrab },
-   //                     ShaderLoadList.ring.vertex, ShaderLoadList.ring.fragment);
-   //             }
-   //         }
-//
-   //         MainScene.add(ringsList[i].Ring);
-   //     }
-//
-   //     UpdateLook();
-   // }
+function fetchRings(colors, vertex_text, fragment_text) {
+
+     if (ringsList !== undefined) {
+
+     }
 }
 
 function CreateFlatBelt(ringData, vertex_text, fragment_text) {
@@ -699,49 +653,6 @@ function InitializeRingsData(ringsList) {
 
 function InitializeMoonData(moonList, vertex_text, fragment_text) {
     for (var i = 0; i < moonList.length; i++) {
-        var roll = randomRange(0, 10);
-
-        var mat;
-        size = randomRange(1, Math.round(planetSize / 4));
-        orbitspeed = randomRange(-2, 2);
-        orbitspeed = (orbitspeed == 0) ? 1 : orbitspeed;
-
-        moonData = createPlantiodData(octaves, persistance, lacunarity,
-            seed, 128, offset, 24);
-
-        moonMaterial = PlanetMaterial.clone();
-
-
-        moonMaterial.uniforms.texture.value = moonData.map;
-        mat = moonMaterial;
-
-        moonList[i] =
-            {
-
-                //Again Much Credit To The Folks At Qt:
-                //https://doc.qt.io/qt-5/qt3d-planets-qml-planets-js.html 
-                //Smexcity !!!
-
-                // radius - planet radius in millions of meters
-                // tilt - planet axis angle
-                // N1 N2 - longitude of the ascending node
-                // i1 i2 - inclination to the ecliptic (plane of the Earth's orbit)
-                // w1 w2 - argument of perihelion
-                // a1 a2 - semi-major axis, or mean distance from Sun
-                // e1 e2 - eccentricity (0=circle, 0-1=ellipse, 1=parabola)
-                // M1 M2 - mean anomaly (0 at perihelion; increases uniformly with time)
-                // period - sidereal rotation period
-                // centerOfOrbit - the planet in the center of the orbit
-                // (orbital elements based on http://www.stjarnhimlen.se/comp/ppcomp.html)
-                //i1: 115.1454
-
-                radius: 1.5424, tilt: 0, N1: 125.1228, N2: 0,
-                i1: randomRange(-60, 60), i2: 0, w1: 318.0634, w2: 0.1643573223,
-                a1: randomRange(planetSize / 1000 + .02, 0.32), a2: 0, e1: 0, e2: 0,
-                M1: 115.3654, M2: 13.0649929509, period: 1, moonSize: size,
-                moonObject: createMoon(size, mat), material: mat, selected: false,
-                moonOrbit: 0, orbitSpeedMult: orbitspeed, inMoon: false, text: false
-            }
     }
 }
 
@@ -784,43 +695,9 @@ function setUpSky(start, vertex_text, fragment_text) {
     skyboxuniforms.resolution.value.y = window.innerHeight;
 }
 
-function createAtmos(colors, vertex_text, fragment_text) {
-    if (atmo !== undefined) {
-        MainScene.remove(atmo);
-        doDispose(atmo);
-    }
-    var col = ColorPalletes[randomRangeRound(0, ColorPalletes.length - 1)];
-    var colorsRGBLight = col[randomRangeRound(0, col.length - 1)].RGB;
-    var colorsRGBDark = col[randomRangeRound(0, col.length - 1)].RGB;
-
-    atmouniforms.fresnelExp.value = randomRange(0.10, 1.99);
-    atmouniforms.transitionWidth.value = randomRange(0.01, 0.05);
-    atmouniforms.colorlight.value = colorsRGBLight;
-    atmouniforms.colordark.value = colorsRGBDark;
-
-    atmouniforms.atmoThickness.value = randomRange(0.00, 3.00);
-
-    atmoMaterial = new THREE.ShaderMaterial
-        ({
-            uniforms: THREE.UniformsUtils.merge
-                ([
-                    THREE.UniformsLib['lights'],
-                    atmouniforms
-                ]),
-            vertexShader: vertex_text,
-            fragmentShader: fragment_text,
-            transparent: true,
-            lights: true
-        }
-        );
-    atmoMaterial.uniforms._Gradient.value = atmoGrad;
-
-    atmo = new THREE.Mesh(new THREE.IcosahedronGeometry(
-        planetSize * randomRange(1.01, 1.05), 4), atmoMaterial);
-    atmo.position.set(0, 0, 0);//= planet.position;
-    atmo.castShadow = false;
-    atmo.receiveShadow = false;
-    MainScene.add(atmo);
+function fetchAtmo(colors, vertex_text, fragment_text) {
+    var vertex = vertex_text;
+    var fragment = fragment_text;
 }
 
 function RemoveOldShizz() {
@@ -873,141 +750,39 @@ function RemoveOldShizz() {
 
 function fetchPlanet(start, vertex_text, fragment_text) {
 
-    if (planet !== undefined) {
-        RemoveOldShizz();
-    }
-    else {
-        var vertex = vertex_text;
-        var fragment = fragment_text;
-        //var ico = new THREE.IcosahedronGeometry(planetSize, 4);
+    Fetch_Parametres(vertex_text, fragment_text);
 
-        PlanetMaterial = new THREE.ShaderMaterial({
-            uniforms: THREE.UniformsUtils.merge([
-                THREE.UniformsLib['lights'],
-                planetUniform]),
-            vertexShader: (vertex),
-            fragmentShader: (fragment),
-            lights: true
-        });
-        //TargetUI();
-        refreshPlanetButton = generateButtonUi(new THREE.Vector3(0, 0, 0)
-            , "110px", -1000, "img/Icons/Refresh.png", "Ui-Label", "Refresh");
-        showPlanetButton = generateButtonUi(new THREE.Vector3(0, 0, 0)
-            , "110px", -1000, "", "Ui-Label", "Show");
-    }
+    var vertex = vertex_text;
+    var fragment = fragment_text;
 
-    //CalculateParametres(vertex_text, fragment_text);
+    PlanetMaterial = new THREE.ShaderMaterial({
+        uniforms: THREE.UniformsUtils.merge([
+            THREE.UniformsLib['lights'],
+            planetUniform]),
+        vertexShader: (vertex),
+        fragmentShader: (fragment),
+        lights: true
+    });
 
-    //planetData = createPlantiodData(octaves, persistance, lacunarity,
-    //    seed, noiseScale, offset, textureSize);
-    //Custom image mapping addtion
-    //maybe find a smarter way to do this :s
-    //regions, url, size, planet, vertex_text, fragment_text
-    //var cube = new THREE.CubeGeometry(200, 200, 200);
-    //var ico = new THREE.IcosahedronGeometry(planetSize, 4);
+    var planetmap = new THREE.TextureLoader().load( 'planetimgs/Jitoenaw-941.png' );
+    planetmap.wrapS = planetmap.wrapT = THREE.RepeatWrapping;
+    planetmap.magFilter = THREE.NearestFilter;
+    planetmap.minFilter = THREE.NearestFilter;
 
-   // planet = new THREE.Mesh(cube,
-   //..     PlanetMaterial);
-   // planet.castShadow = true; //default is false
-    //planet.receiveShadow = true; //default
+    PlanetMaterial.uniforms.texture.value = planetmap;
 
-   var texterLoader = new THREE.TextureLoader();
-   var planetMap = texterLoader.load("planetimgs/Bbynrd-435.png");
-   
-   var loader = new THREE.OBJLoader();
-   ///var planetObj = loader.load("objects/Bbynrd-435.obj");
+    var loader = new THREE.GLTFLoader();
+    var loadedObject;
+    loader.load('objects/Jitoenaw-941.gltf', function ( gltf ) {
+        var object = gltf.scene;
+        loadedObject = object;
+        //console.log(object.children[0]);
+        object.children[0].material = PlanetMaterial;
 
-   //planet = new THREE.Mesh(planetObj, PlanetMaterial);
-   //planet.castShadow = true; //default is false
-   //planet.receiveShadow = true; //default
-   //MainScene.add(planet);
-
-   PlanetMaterial.uniforms.texture.value = planetMap.image;//"planetimg/Bbynrd-435.png" //planetData.map;
-   // console.log(planetMap);
-    // load a resource
-    loader.load(
-	// resource URL
-	'objects/Bbynrd-435.obj',
-	// called when resource is loaded
-	function ( object ) {
-
-        planet = new THREE.Mesh(object.mesh, PlanetMaterial);
-        planet.castShadow = true; //default is false
-        planet.receiveShadow = true; //default
-        MainScene.add(planet);
-
-	},
-	// called when loading is in progresses
-	function ( xhr ) {
-
-		console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-
-	},
-	// called when loading has errors
-	function ( error ) {
-
-		console.log( 'An error happened' );
-
-	}
-);
-
-    //if (planetData.url == '') {
-//
-    //}
-    //else {
-    //    var customData = {
-    //        region: planetData.regionsInfo, size: textureSize, mat: PlanetMaterial,
-    //        vert: vertex_text, frag: fragment_text
-    //    };
-    //    CustomTextureLoader(planetData.url, customData, SetupTextureFunction);
-   // }
-    //dirLight.target = planet;
-    //planetData.regionsInfo, planetData.url, 
-    //textureSize, planet, vertex_text, fragment_text
-
-    //planetText = generateName(planet, 55, -1000, false);
-
-    //if (ShaderLoadList.atmo.vertex == undefined) {
-    //    ShaderLoader('js/Shaders/Atmo/AtmoShader.vs.glsl',
-    //        'js/Shaders/Atmo/AtmoShader.fs.glsl', setUpAtmosphere, planetData.colors);
-    //}
-    //else {
-        //createAtmos(planetData.colors, ShaderLoadList.atmo.vertex, ShaderLoadList.atmo.fragment);
-    //}
-
-    //for (var i = 0; i < moonList.length; i++) {
-    //    moonList[i].moonOrbit = DrawOrbit(moonList[i], new THREE.Vector3(0, 0, 0),
-    //        clock.getElapsedTime(), 1000, planetData.colors, i, moonList.length);
-    //    MainScene.add(moonList[i].moonObject);
-//
-    //    if (moonList[i].moonOrbit != 0)
-    //        MainScene.add(moonList[i].moonOrbit);
-//
-    //    moonList[i].text = generateName(moonList[i].moonObject, "35px", -1000, false);// generateName(planet, "35px", -1000);
-    //}
-//
-    //var roll = randomRange(0, 10);
-//
-    //if (roll >= 5) {
-    //    hasRings = true;
-//
-    //    if (ShaderLoadList.asto.vertex == undefined) {
-    //        ShaderLoader('js/Shaders/Asto/Asto.vs.glsl',
-    //            'js/Shaders/Asto/Asto.fs.glsl', setUpRings, planetData.colors);
-    //    }
-    //    else {
-    //        setUpRings(planetData.colors, ShaderLoadList.asto.vertex, ShaderLoadList.asto.fragment);
-    //    }
-    //}
-    //else {
-    //    hasRings = false;
-    //}
-//
-    //planetTextInfo = generateName(planet, 1, -1000, true, planetData.colors, planetData.regionsInfo);
-    //planetTextInfo.setWidthbyPercent(75);
-    //planetTextInfo.setHeight(planetSize);
-    // targetPoint.object = moonList[0].moonObject;
-    //targetPoint.size = 0.75;
+        object.castShadow = true; //default is false
+        object.receiveShadow = true; //default
+        MainScene.add(object);
+    } );
 }
 
 
@@ -1039,7 +814,7 @@ function fetchmoon(moonSize, mat) {
     //return moon;
 }
 
-function fetchPlanatiodData(){
+function fetchPlanatiodData() {
 
 }
 //function createPlantiodData(octaves, persistance, lacunarity, seed, noiseScale, offset, size) {
@@ -1110,82 +885,10 @@ function generateButtonUi(parent, fontsize, left, url, classname, id) {
 }
 
 function generateImageUi(parent, fontsize, left, url, classname, id) {
-    var roll = randomRange(0, 10);
-    var newUI = createImgLabel(fontsize, left, id, classname);
-    newUI.setHTML('<img src=' + url + '>');
-    newUI.setParent(parent);
-    container.appendChild(newUI.element);
-
-    return newUI;
 }
 
 function generateName(parent, fontsize, left, isInfo, colorpallette, regions) {
-    var color = (parent == planet) ? "#FF61DB" : "#ffffff";
-    var label = (isInfo) ? "Planet-Info" : 'text-label';
-    var roll = randomRange(0, 10);
-    var newText = createTextLabel(fontsize, left, label, color);
-    var wordtxt = word(randomRange(3, 25));
 
-    if (roll > 5 && !isInfo) {
-        newText.setHTML(wordtxt + "-" + Math.round(randomRange(0, 1000)));
-    }
-    else if (!isInfo) {
-        newText.setHTML(wordtxt);
-    }
-    else {
-        var moon = "Moons: " + moonList.length;
-        moon = moon.fontcolor("#f1c40f");
-
-        var size = "Size: " + Math.round(planetSize) * 100 + " km"
-        size = size.fontcolor("#e67e22");
-
-        var atmo = "Atmo: " + Math.round(((planetSize * 1.07) - planetSize) * 100)
-            + " km"
-        atmo = atmo.fontcolor("#e74c3c");
-
-        var condition = "Condition: " + BuildHazard();
-        condition = condition.fontcolor("#9b59b6");
-
-        var bio = BuildBio(planetSize * 100);
-        bio = bio.fontcolor("#f39c12");
-
-        var CE = "Common Elements";
-        CE = CE.fontcolor("#2980b9");
-
-        name = word(randomRange(3, 25)) + "-" + Math.round(randomRange(0, 1000));
-        //name = name.fontsize(12);
-        //name = name.bold();
-        planetName = name;
-        name = name.anchor("Planet-Name");
-
-        newText.setHTML
-            (
-            name
-            + "<br>" +
-            "<br>" +
-            moon
-            + "<br>" +
-            size
-            + "<br>" +
-            atmo
-            + "<br>" +
-            condition
-            + "<br>"
-
-            + "<br>" +
-            CE + "<br>" + buildElements(colorpallette, regions)
-            + "<br>" +
-            ""
-            + "<br>" +
-            bio
-
-            );
-    }
-
-    newText.setParent(parent);
-    container.appendChild(newText.element);
-
-    return newText;
 }
 // Credit to THeK3nger - https://gist.github.com/THeK3nger/300b6a62b923c913223fbd29c8b5ac73
 //Sorry to any soul that bare's witness to this Abomination....May the gods have mercy on me

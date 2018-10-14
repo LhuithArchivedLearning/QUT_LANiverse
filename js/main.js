@@ -22,7 +22,7 @@ var ringlistsize = 0;
 
 var planetSize, planetData, inPlanet, planet,
     planetText, planetTextInfo, atmoMaterial, planetTilt, hasRings,
-    PlanetMaterial, moonList, ringsList , outline, planetObject,
+    PlanetMaterial, moonList, ringsList, outline, planetObject,
     atmo, planetRotationPeriod, planetSelected, planetName;
 
 var targetPoint = { object: new THREE.Object3D(), size: 0 };
@@ -574,7 +574,7 @@ function setUpRings(colors, vertex_text, fragment_text) {
 
     ShaderLoadList.asto.vertex = vertex_text;
     ShaderLoadList.asto.fragment = fragment_text;
-    
+
 
     ringsList = new Array(ringlistsize);
 
@@ -598,8 +598,9 @@ function setUpRings(colors, vertex_text, fragment_text) {
                         'js/Shaders/Ring/Ring.fs.glsl', SetUpFlatBelt, { data: ringsList[i], Ringcolors: AstoColorPalleteGrab });
                 }
                 else {
+                    
                     CreateFlatBelt({ data: ringsList[i], Ringcolors: AstoColorPalleteGrab },
-                        ShaderLoadList.ring.vertex, ShaderLoadList.ring.fragment);
+                        ShaderLoadList.ring.vertex, ShaderLoadList.ring.fragment, i);
                 }
             }
 
@@ -610,7 +611,7 @@ function setUpRings(colors, vertex_text, fragment_text) {
     }
 }
 
-function CreateFlatBelt(ringData, vertex_text, fragment_text) {
+function CreateFlatBelt(ringData, vertex_text, fragment_text, index) {
     var ringGeo = new RingGeoCreate(ringData.data, ringData.data.Ring, 1000);
     var ringLimits = new Array(5);
     var transparency = new Array(5);
@@ -655,6 +656,7 @@ function CreateFlatBelt(ringData, vertex_text, fragment_text) {
     newRing.receiveShadow = true;
 
     ringData.data.Ring.add(newRing);
+    export_ring(newRing, index, ringMaterial);
 }
 
 function InitializeRingsData(ringsList) {
@@ -701,6 +703,7 @@ function InitializeRingsData(ringsList) {
                 M1: 115.3654, M2: 13.0649929509, period: per, NumAstros: NumAstros,
                 Ring: new THREE.Object3D(), orbitSpeedMult: orbitspeed, astoList: []
             }
+
     }
 
 }
@@ -914,12 +917,6 @@ function createPlanet(start, vertex_text, fragment_text) {
     var cube = new THREE.CubeGeometry(200, 200, 200);
     var ico = new THREE.IcosahedronGeometry(planetSize, 4);
 
-    planet = new THREE.Mesh(cube,
-        PlanetMaterial);
-    planet.castShadow = true; //default is false
-    planet.receiveShadow = true; //default
-
-
     if (planetData.url == '') {
         planet = new THREE.Mesh(ico,
             PlanetMaterial);
@@ -981,18 +978,23 @@ function createPlanet(start, vertex_text, fragment_text) {
     planetTextInfo = generateName(planet, 1, -1000, true, planetData.colors, planetData.regionsInfo);
     planetTextInfo.setWidthbyPercent(75);
     planetTextInfo.setHeight(planetSize);
-    // targetPoint.object = moonList[0].moonObject;
-    //targetPoint.size = 0.75;
+    planet.name = planetName;
 
 
-    //Save PLanet Information
+    //clear custom material (for now)
+    var material = new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+    });
+
+    planet.material = material;
     PostPLanetInformation(planetData.map, planet);
+    planet.material = PlanetMaterial;
 }
 
 function PostPLanetInformation(map, planetobject) {
     // create off-screen canvas element
     var canvastest = document.createElement('canvas'),
-    ctx = canvastest.getContext('2d');
+        ctx = canvastest.getContext('2d');
     document.getElementById("foot").appendChild(canvastest);
 
     canvastest.width = 256;
@@ -1002,54 +1004,153 @@ function PostPLanetInformation(map, planetobject) {
     var idata = ctx.createImageData(256, 256);
 
     // set our buffer as source
-    idata.data.set(map.image.data);
-
+    //idata.data.set(map.image);
+    console.log(map);
+    for (var x = 0; x < 256; x++) {
+        for (var y = 0; y < 256; y++) {
+            var idx = (x + y * 256) * 4;
+            var idx2 = (x + y * 256) * 3;
+            idata.data[idx + 0] = map.image.data[idx2 + 0];
+            idata.data[idx + 1] = map.image.data[idx2 + 1];
+            idata.data[idx + 2] = map.image.data[idx2 + 2];
+            idata.data[idx + 3] = 255;
+        }
+    }
     // update canvas with new data
     ctx.putImageData(idata, 0, 0);
     var dataUri = canvastest.toDataURL('image/png'); // produces a PNG file
-    var planetObjectData = export_object(planetobject);
 
-    console.log(planetObjectData);
+
+
+    export_object(planetobject);
+
+   //if (hasRings) {
+   //    for (var i = 0; i < ringlistsize; i++) {
+   //        if(ringsList[i] !== undefined)
+   //            export_ring(ringsList[i].Ring, i);
+   //    }
+   //}
+
     $.ajax({
         type: 'POST',
-        url: '/planet_post.php',
+        url: '/planet_information_post.php',
         data: {
             name: planetName, texture_00_url: "Test_Url", size: planetSize, Tilt: planetTilt,
-            RotationPeriod: planetRotationPeriod, numMoons: moonListsize, numRings: (hasRings) ? ringlistsize : 0, texture_00:dataUri, object:planetObjectData
+            RotationPeriod: planetRotationPeriod, numMoons: moonListsize, numRings: (hasRings) ? ringlistsize : 0,
+            texture_00: dataUri,
         },
+        success: function (d) {
+            console.log('done');
+        }
     });
-
-    //if(hasRings){
-    //    if(ringsList !== undefined)
-    //    {
-    //        if(ringsList[0].isFlat)
-    //            export_object(ringsList[0].Ring);
-    //    }
-    //}
 }
 
-function export_object(object){
+function export_object(object) {
 
-    var exporter = new THREE.OBJExporter();
-    var data = exporter.parse(object);
-    return data;
+    var gltfExporter = new THREE.GLTFExporter();
+    var options = {
+        trs: false,
+        onlyVisible: false,
+        truncateDrawRange: false,
+        binary: false,
+        forceIndices: false,
+        forcePowerOfTwoTextures: false
+    };
+
+    gltfExporter.parse(object, function (result) {
+        // data = JSON.stringify(result, null, 2);
+        ////console.log(output);
+        ////saveString(output, 'scene.gltf');
+        var output = JSON.stringify(result, null, 2);
+        var blob = new Blob([output], { type: 'text/plain' });
+        var href = URL.createObjectURL(blob);
+
+        $.ajax({
+            type: 'POST',
+            url: '/object_post.php',
+            data: { name: planetName, object: output },
+            dataType: 'json',
+            success: function (d) {
+                console.log('object done');
+            }
+        });
+
+    }, options);
+}
+
+function export_ring(ring, index, oldmat) {
+
+    var material = new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+    });
+    ring.material = material;
+
+    console.log("Passing");
+    var gltfExporter = new THREE.GLTFExporter();
+    var options = {
+        trs: false,
+        onlyVisible: false,
+        truncateDrawRange: false,
+        binary: false,
+        forceIndices: false,
+        forcePowerOfTwoTextures: false
+    };
+
+    gltfExporter.parse(ring, function (result) {
+        // data = JSON.stringify(result, null, 2);
+        ////console.log(output);
+        ////saveString(output, 'scene.gltf');
+        var output = JSON.stringify(result, null, 2);
+        var blob = new Blob([output], { type: 'text/plain' });
+        var href = URL.createObjectURL(blob);
+
+        $.ajax({
+            type: 'POST',
+            url: '/object_post.php',
+            data: { name: planetName + "Ring" + index.toString(), object: output },
+            dataType: 'json',
+            success: function (d) {
+                console.log('ring done');
+            }
+        });
+
+    }, options);
+
+    ring.material = oldmat;
+}
+
+function saveString(text) {
+
+    return (new Blob([text], { type: 'text/plain' }));
+
+}
+
+
+function save(blob, filename) {
+
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+
+    // URL.revokeObjectURL( url ); breaks Firefox...
+
 }
 
 function download(data, filename, type) {
-    var file = new Blob([data], {type: type});
+    var file = new Blob([data], { type: type });
     if (window.navigator.msSaveOrOpenBlob) // IE10+
         window.navigator.msSaveOrOpenBlob(file, filename);
     else { // Others
         var a = document.createElement("a"),
-                url = URL.createObjectURL(file);
+            url = URL.createObjectURL(file);
         a.href = url;
         a.download = filename;
         document.body.appendChild(a);
         a.click();
-        setTimeout(function() {
+        setTimeout(function () {
             document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);  
-        }, 0); 
+            window.URL.revokeObjectURL(url);
+        }, 0);
     }
 }
 
