@@ -28,9 +28,9 @@
 	
 
 	<!-- Three JS -->
-	<!--<script type="text/javascript" src="js/THREE/three.min.js"></script> -->
+	<script type="text/javascript" src="js/THREE/three.min.js"></script>
 	
-	<script src="./three.js webgl - gltf exporter_files/three.js.download"></script>
+	<!-- <script src="./three.js webgl - gltf exporter_files/three.js.download"></script>-->
 	<script type="text/javascript" src="js/THREE/CanvasRenderer.js"></script>
 	<script type="text/javascript" src="js/THREE/OrbitControls.js"></script>
 	<script type="text/javascript" src="js/THREE/WorldData.js"></script>
@@ -65,10 +65,10 @@
 	<script type="text/javascript" src="js/WorldGenerator/Noise2D.js"></script>
 	<script type="text/javascript" src="js/WorldGenerator/NoiseFromTexture.js"></script>
 	<script type="text/javascript" src="js/WorldGenerator/Regions.js"></script>
-	<script
+	<!--<script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
+  crossorigin="anonymous"></script> -->
 </head>
 
 <body>
@@ -93,7 +93,7 @@
 		</div>
 	</div>
 	<footer id ="foot" class="page-footer gold footer-body padding-10 ">
-	    <h6 class="t-align-c" id='echo'><?php include ('database.php');?> </h6>
+	   	<!--<h6 class="t-align-c" id='echo'><?php include ('database.php');?> </h6>-->
 		<h6 class="t-align-c">Created using THREE.js </h6>
 	</footer>
 </body>

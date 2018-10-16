@@ -684,15 +684,15 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 				break;
 
-			case scope.mouseButtons.PAN:
-
-				if ( scope.enablePan === false ) return;
-
-				handleMouseDownPan( event );
-
-				state = STATE.PAN;
-
-				break;
+			//case scope.mouseButtons.PAN:
+//
+			//	if ( scope.enablePan === false ) return;
+//
+			//	handleMouseDownPan( event );
+//
+			//	state = STATE.PAN;
+//
+			//	break;
 
 		}
 

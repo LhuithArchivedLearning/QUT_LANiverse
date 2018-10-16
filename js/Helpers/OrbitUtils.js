@@ -136,6 +136,7 @@ function CreateRockyBelt(ringData, centre, currTimeD, auScale, numAstos, ringObj
            });
        
         astoMaterial.uniforms.texture.value = texture;
+        astoMaterial.side = THREE.DoubleSide;
         var vector = returnOrbitionPosition(ringData, i, false, centre, true);
         var x = vector.x + randomRange(-10, 10);
         var y = vector.y + randomRange(-10, 10);
@@ -145,7 +146,7 @@ function CreateRockyBelt(ringData, centre, currTimeD, auScale, numAstos, ringObj
         asto.castShadow = true;
         astosize = randomRange(4, 12);
         asto.scale.set(astosize, astosize, 1);
-
+        //rotateObject(asto, 0, 0, 90);
         var gyro = new THREE.Gyroscope();
         gyro.add(asto);
         gyro.position.set(x, y, z);
@@ -158,10 +159,23 @@ function CreateRockyBelt(ringData, centre, currTimeD, auScale, numAstos, ringObj
             color:[grabcolor.r, grabcolor.g, grabcolor.b], texture_index:textureindex, size:astosize, astomat:astoMaterial})
     }
 
-    export_rocky_ring(ringObject, ringnum, astoshaderinformationlist, numAstos);
+    //export_rocky_ring(ringObject, ringnum, astoshaderinformationlist, numAstos);
 }
 
 
+function rotateObject(object,degreeX=0, degreeY=0, degreeZ=0){
+
+    degreeX = (degreeX * Math.PI)/180;
+    degreeY = (degreeY * Math.PI)/180;
+    degreeZ = (degreeZ * Math.PI)/180;
+ 
+    object.rotateX(degreeX);
+    object.rotateY(degreeY);
+    object.rotateZ(degreeZ);
+ 
+ }
+
+ 
 
 function orbit(planet, object, centre, currTimeD, auScale, deltaTimeD) {
 

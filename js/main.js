@@ -171,8 +171,8 @@ function init() {
     clock = new THREE.Clock();
 
     //Add Controls
-    //controls = new THREE.OrbitControls(camera, renderer.domElement);
-    //controls.addEventListener('change', UpdateLook);
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.addEventListener('change', UpdateLook);
     //controls.minZoom = 0.3;
     //controls.maxZoom = 1.5;
 
@@ -218,7 +218,7 @@ function init() {
 
     MainRenderPass.renderToScreen = true;
 
-    //controls.addEventListener("change", render);
+    controls.addEventListener("change", render);
     //var gridHelper = new THREE.GridHelper(1000, 20);
     //MainScene.add( gridHelper );
 
@@ -415,7 +415,9 @@ function UpdateLook() {
             if (!ringsList[i].isFlat) {
                 ringsList[i].Ring.traverse(function (child) {
                     if (child instanceof THREE.Mesh) {
-                        child.lookAt(camera.position);
+                        //console.log("Ass");
+                        //child.lookAt(camera.position);
+                        child.quaternion.copy(camera.quaternion);
                     }
                 });
             }
@@ -670,7 +672,7 @@ function CreateFlatBelt(ringData, vertex_text, fragment_text) {
         color: 0xff0000,
     });
 
-    var newRing = new THREE.Mesh(ringGeo, material);
+    var newRing = new THREE.Mesh(ringGeo, ringMaterial);
     newRing.castShadow = true;
     newRing.receiveShadow = true;
 
@@ -678,7 +680,7 @@ function CreateFlatBelt(ringData, vertex_text, fragment_text) {
 
     //console.log(shaderinfosave);
 
-    export_ring(newRing, ringData.index, ringMaterial, shaderinfosave, false);
+    //export_ring(newRing, ringData.index, ringMaterial, shaderinfosave, false);
 }
 
 function InitializeRingsData(ringsList) {
@@ -860,7 +862,7 @@ function createAtmos(colors, vertex_text, fragment_text) {
     atmo.receiveShadow = false;
     MainScene.add(atmo);
     atmosphereshaderinfo = { colorLight: colorsRGBLight, colorDark: colorsRGBDark, fresnel: fresnel, transitionWidth: transwidth, thickness: thickness, size: atmosize };
-    export_atm(atmo, atmoMaterial, atmosphereshaderinfo);
+    //export_atm(atmo, atmoMaterial, atmosphereshaderinfo);
 }
 
 function RemoveOldShizz() {
@@ -1015,9 +1017,9 @@ function createPlanet(start, vertex_text, fragment_text) {
         color: 0xff0000,
     });
 
-    planet.material = material;
-    PostPLanetInformation(planetData.map, planet);
-    planet.material = PlanetMaterial;
+    //.material = material;
+   // P//ostPLanetInformation(planetData.map, planet);
+    //planet.material = PlanetMaterial;
 }
 
 function PostPLanetInformation(map, planetobject) {
