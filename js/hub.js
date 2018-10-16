@@ -764,7 +764,7 @@ function fetchPlanet(start, vertex_text, fragment_text) {
         lights: true
     });
 
-    var planetmap = new THREE.TextureLoader().load( 'planetimgs/Jitoenaw-941.png' );
+    var planetmap = new THREE.TextureLoader().load( 'planetimgs/Crastw-117.png' );
     planetmap.wrapS = planetmap.wrapT = THREE.RepeatWrapping;
     planetmap.magFilter = THREE.NearestFilter;
     planetmap.minFilter = THREE.NearestFilter;
@@ -773,7 +773,7 @@ function fetchPlanet(start, vertex_text, fragment_text) {
 
     var loader = new THREE.GLTFLoader();
     var loadedObject;
-    loader.load('objects/Jitoenaw-941.gltf', function ( gltf ) {
+    loader.load('objects/Crastw-117/Crastw-117.gltf', function ( gltf ) {
         var object = gltf.scene;
         loadedObject = object;
         //console.log(object.children[0]);
@@ -815,30 +815,9 @@ function fetchmoon(moonSize, mat) {
 }
 
 function fetchPlanatiodData() {
-
+    
 }
-//function createPlantiodData(octaves, persistance, lacunarity, seed, noiseScale, offset, size) {
-//    var planetInfo = new MapGenerator(octaves, persistance, lacunarity,
-//        seed, noiseScale, offset, size, false);
-//
-//    var dataTexture;
-//
-//    dataTexture = new THREE.DataTexture
-//        (
-//        Uint8Array.from(planetInfo.map),
-//        size,
-//        size,
-//        THREE.RGBFormat,
-//        THREE.UnsignedByteType,
-//        );
-//
-//    dataTexture.needsUpdate = true;
-//    textureList.push(dataTexture);
-//
-//    return new PlanetInformation(dataTexture, planetInfo.hasAtmo,
-//        planetInfo.hasLiquad, planetInfo.colors, planetInfo.url,
-//        planetInfo.regionsInfo);
-//}
+
 
 function generateButtonUi(parent, fontsize, left, url, classname, id) {
 

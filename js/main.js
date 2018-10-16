@@ -20,6 +20,8 @@ var textureList = [];
 var moonListsize = 0;
 var ringlistsize = 0;
 
+var atmosphereshaderinfo;
+
 var planetSize, planetData, inPlanet, planet,
     planetText, planetTextInfo, atmoMaterial, planetTilt, hasRings,
     PlanetMaterial, moonList, ringsList, outline, planetObject,
@@ -163,14 +165,14 @@ function init() {
     renderer.shadowMap.enabled = true;
     renderer.shadowMapSoft = false;
     renderer.shadowMapSize = 32;
-    renderer.shadowMap.renderReverseSided = false;
-    renderer.shadowMap.renderSingleSided = false;
-
+    renderer.shadowMap.shadowSide = false;
+    //renderer.shadowMap.shadowSide = false;
+    //renderer.Material.shadowMap = false;
     clock = new THREE.Clock();
 
     //Add Controls
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.addEventListener('change', UpdateLook);
+    //controls = new THREE.OrbitControls(camera, renderer.domElement);
+    //controls.addEventListener('change', UpdateLook);
     //controls.minZoom = 0.3;
     //controls.maxZoom = 1.5;
 
@@ -216,7 +218,7 @@ function init() {
 
     MainRenderPass.renderToScreen = true;
 
-    controls.addEventListener("change", render);
+    //controls.addEventListener("change", render);
     //var gridHelper = new THREE.GridHelper(1000, 20);
     //MainScene.add( gridHelper );
 
@@ -585,22 +587,21 @@ function setUpRings(colors, vertex_text, fragment_text) {
 
     if (ringsList !== undefined) {
         for (var i = 0; i < ringsList.length; i++) {
-
             if (!ringsList[i].isFlat) {
                 CreateRockyBelt(ringsList[i], new THREE.Vector3(0, 0, 0), clock.getElapsedTime(),
-                    1000, ringsList[i].NumAstros, ringsList[i].Ring,
-                    vertex_text, fragment_text, dirLight.position,
-                    ringsList[i].astoList, AstoColorPalleteGrab);
+                    1000, ringsList[i].NumAstros, ringsList[i].Ring, vertex_text, fragment_text,
+                    dirLight.position, ringsList[i].astoList, AstoColorPalleteGrab, index, i);
+                    //export_rocky_ring(ringsList[i].Ring, i, {astomat:ringsList[i].Ring.children[0].children[0].material}, ringsList.length);
             }
             else {
                 if (ShaderLoadList.ring.vertex == undefined) {
                     ShaderLoader('js/Shaders/Ring/Ring.vs.glsl',
-                        'js/Shaders/Ring/Ring.fs.glsl', SetUpFlatBelt, { data: ringsList[i], Ringcolors: AstoColorPalleteGrab });
+                        'js/Shaders/Ring/Ring.fs.glsl', SetUpFlatBelt, { data: ringsList[i], Ringcolors: AstoColorPalleteGrab, index: i, palletteIndex: index });
                 }
                 else {
-                    
-                    CreateFlatBelt({ data: ringsList[i], Ringcolors: AstoColorPalleteGrab },
-                        ShaderLoadList.ring.vertex, ShaderLoadList.ring.fragment, i);
+
+                    CreateFlatBelt({ data: ringsList[i], Ringcolors: AstoColorPalleteGrab, index: i, palletteIndex: index },
+                        ShaderLoadList.ring.vertex, ShaderLoadList.ring.fragment);
                 }
             }
 
@@ -611,7 +612,12 @@ function setUpRings(colors, vertex_text, fragment_text) {
     }
 }
 
-function CreateFlatBelt(ringData, vertex_text, fragment_text, index) {
+function CreateFlatBelt(ringData, vertex_text, fragment_text) {
+    //var ringshaderinformation = "";
+    var shaderinfosave = { name: "index: " + ringData.index.toString(), colorPalleteIndex: ringData.palletteIndex, limits: '', colors: [], transparancy: [] }
+
+    //ringshaderinformation += "index: "+ ringData.index.toString() +", colorPalleteIndex: " + ringData.palletteIndex.toString();
+
     var ringGeo = new RingGeoCreate(ringData.data, ringData.data.Ring, 1000);
     var ringLimits = new Array(5);
     var transparency = new Array(5);
@@ -619,6 +625,12 @@ function CreateFlatBelt(ringData, vertex_text, fragment_text, index) {
     ringLimits[0] = randomRange(0.01, 0.5);
     ringLimits[1] = randomRange(ringLimits[0], 0.6);
     ringLimits[2] = randomRange(ringLimits[1], 0.9);
+
+    // ringshaderinformation += ", ringLimits_"+ (0).toString() +": " + ringLimits[0];
+    // ringshaderinformation += ", ringLimits_"+ (1).toString() +": " + ringLimits[1];
+    // ringshaderinformation += ", ringLimits_"+ (2).toString() +": " + ringLimits[2];
+
+    shaderinfosave.limits = [ringLimits[0], ringLimits[1], ringLimits[2]];
 
     var colorsRGB = [];
 
@@ -628,11 +640,14 @@ function CreateFlatBelt(ringData, vertex_text, fragment_text, index) {
         var B = ringData.Ringcolors[j].RGB.b;
 
         var normalColors = new THREE.Vector3(R, G, B);
+        //ringshaderinformation += ", color_"+ j.toString() +": " + "r:" + R.toString() + ", g:" + G.toString() + ", b:" + B.toString();
+        shaderinfosave.colors.push({ r: R, g: G, b: B });
         colorsRGB.push(normalColors);
     }
-
     for (var i = 0; i < 5; i++) {
         transparency[i] = randomRange(0.1, 1.0);
+        //ringshaderinformation += ", transparency_"+ i.toString() +": " + transparency[i];
+        shaderinfosave.transparancy.push(transparency[i]);
     }
 
     ringUniform.colors.value = colorsRGB;
@@ -651,12 +666,19 @@ function CreateFlatBelt(ringData, vertex_text, fragment_text, index) {
         });
     ringMaterial.side = THREE.DoubleSide;
 
-    var newRing = new THREE.Mesh(ringGeo, ringMaterial);
+    var material = new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+    });
+
+    var newRing = new THREE.Mesh(ringGeo, material);
     newRing.castShadow = true;
     newRing.receiveShadow = true;
 
     ringData.data.Ring.add(newRing);
-    export_ring(newRing, index, ringMaterial);
+
+    //console.log(shaderinfosave);
+
+    export_ring(newRing, ringData.index, ringMaterial, shaderinfosave, false);
 }
 
 function InitializeRingsData(ringsList) {
@@ -804,12 +826,17 @@ function createAtmos(colors, vertex_text, fragment_text) {
     var colorsRGBLight = col[randomRangeRound(0, col.length - 1)].RGB;
     var colorsRGBDark = col[randomRangeRound(0, col.length - 1)].RGB;
 
-    atmouniforms.fresnelExp.value = randomRange(0.10, 1.99);
-    atmouniforms.transitionWidth.value = randomRange(0.01, 0.05);
+    var fresnel = randomRange(0.10, 1.99)
+    atmouniforms.fresnelExp.value = fresnel;
+
+    var transwidth = randomRange(0.01, 0.05)
+    atmouniforms.transitionWidth.value = transwidth;
+
     atmouniforms.colorlight.value = colorsRGBLight;
     atmouniforms.colordark.value = colorsRGBDark;
 
-    atmouniforms.atmoThickness.value = randomRange(0.00, 3.00);
+    var thickness = randomRange(0.00, 3.00);
+    atmouniforms.atmoThickness.value = thickness;
 
     atmoMaterial = new THREE.ShaderMaterial
         ({
@@ -825,13 +852,15 @@ function createAtmos(colors, vertex_text, fragment_text) {
         }
         );
     atmoMaterial.uniforms._Gradient.value = atmoGrad;
+    var atmosize = planetSize * randomRange(1.01, 1.05);
 
-    atmo = new THREE.Mesh(new THREE.IcosahedronGeometry(
-        planetSize * randomRange(1.01, 1.05), 4), atmoMaterial);
+    atmo = new THREE.Mesh(new THREE.IcosahedronGeometry(atmosize, 4), atmoMaterial);
     atmo.position.set(0, 0, 0);//= planet.position;
     atmo.castShadow = false;
     atmo.receiveShadow = false;
     MainScene.add(atmo);
+    atmosphereshaderinfo = { colorLight: colorsRGBLight, colorDark: colorsRGBDark, fresnel: fresnel, transitionWidth: transwidth, thickness: thickness, size: atmosize };
+    export_atm(atmo, atmoMaterial, atmosphereshaderinfo);
 }
 
 function RemoveOldShizz() {
@@ -1005,7 +1034,7 @@ function PostPLanetInformation(map, planetobject) {
 
     // set our buffer as source
     //idata.data.set(map.image);
-    console.log(map);
+    //console.log(map);
     for (var x = 0; x < 256; x++) {
         for (var y = 0; y < 256; y++) {
             var idx = (x + y * 256) * 4;
@@ -1022,22 +1051,22 @@ function PostPLanetInformation(map, planetobject) {
 
 
 
-    export_object(planetobject);
+    export_object(planetobject, dataUri);
 
-   //if (hasRings) {
-   //    for (var i = 0; i < ringlistsize; i++) {
-   //        if(ringsList[i] !== undefined)
-   //            export_ring(ringsList[i].Ring, i);
-   //    }
-   //}
+
+    //if (hasRings) {
+    //    for (var i = 0; i < ringlistsize; i++) {
+    //        if(ringsList[i] !== undefined)
+    //            export_ring(ringsList[i].Ring, i);
+    //    }
+    //}
 
     $.ajax({
         type: 'POST',
         url: '/planet_information_post.php',
         data: {
-            name: planetName, texture_00_url: "Test_Url", size: planetSize, Tilt: planetTilt,
+            name: planetName, texture_url: "Test_Url", size: planetSize, Tilt: planetTilt,
             RotationPeriod: planetRotationPeriod, numMoons: moonListsize, numRings: (hasRings) ? ringlistsize : 0,
-            texture_00: dataUri,
         },
         success: function (d) {
             console.log('done');
@@ -1045,7 +1074,7 @@ function PostPLanetInformation(map, planetobject) {
     });
 }
 
-function export_object(object) {
+function export_object(object, image) {
 
     var gltfExporter = new THREE.GLTFExporter();
     var options = {
@@ -1063,7 +1092,6 @@ function export_object(object) {
         ////saveString(output, 'scene.gltf');
         var output = JSON.stringify(result, null, 2);
         var blob = new Blob([output], { type: 'text/plain' });
-        var href = URL.createObjectURL(blob);
 
         $.ajax({
             type: 'POST',
@@ -1078,14 +1106,104 @@ function export_object(object) {
     }, options);
 }
 
-function export_ring(ring, index, oldmat) {
+
+function export_ring(ringobj, ringindex, ringmat, shaderinfo, isrock) {
+
+    if (!isrock) {
+        var material = new THREE.MeshBasicMaterial({
+            color: 0xff0000,
+        });
+        ringobj.material = material;
+    }
+
+    console.log("Passing Flat Ring");
+
+    var gltfExporter = new THREE.GLTFExporter();
+    var options = {
+        trs: false,
+        onlyVisible: false,
+        truncateDrawRange: false,
+        binary: false,
+        forceIndices: false,
+        forcePowerOfTwoTextures: false
+    };
+    var ringinfo = JSON.stringify(shaderinfo, null, 2);
+
+   //gltfExporter.parse(ringobj, function (result) {
+   //    var output = JSON.stringify(result, null, 2);
+   //}, options
+
+   //);
+    
+    $.ajax({
+        type: 'POST',
+        url: '/ring_object_post.php',
+        data: { name: planetName, index: ringindex, shaderinformation: ringinfo },
+        dataType: 'json',
+        success: function (d) {
+            console.log('flat ring done');
+        }
+    });
+
+    if (!isrock) {
+        ringobj.material = ringmat;
+    }
+}
+
+function export_rocky_ring(ringobj, ringindex, shaderinfo, numAstos) {
+
+    console.log("Passing Rock Ring");
 
     var material = new THREE.MeshBasicMaterial({
         color: 0xff0000,
     });
-    ring.material = material;
 
-    console.log("Passing");
+    for (var i = 0; i < numAstos; i++) {
+        ringobj.children[i].children[0].material = material;
+    }
+
+    //var gltfExporter = new THREE.GLTFExporter();
+    //var options = {
+    //    trs: false,
+    //    onlyVisible: false,
+    //    truncateDrawRange: false,
+    //    binary: false,
+    //    forceIndices: false,
+    //    forcePowerOfTwoTextures: false
+    //};
+
+    var ringinfo = JSON.stringify(shaderinfo, null, 2);
+
+    //gltfExporter.parse(ringobj, function (result) {
+//
+    //var output = JSON.stringify(result, null, 2);
+    //}, options);
+
+    $.ajax({
+        type: 'POST',
+        url: '/ring_object_post.php',
+        data: { name: planetName, index: ringindex, shaderinformation: ringinfo},
+        dataType: 'json',
+        success: function (d) {
+            console.log('ring done');
+            
+        }
+    });
+
+    
+    for (var i = 0; i < numAstos; i++) {
+        //ringobj.children[i].children[0].material = shaderinfo[i].astomat;
+    }
+
+    
+}
+
+function export_atm(atmoobj, atmomat, shaderinfo) {
+    var material = new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+    });
+    atmoobj.material = material;
+
     var gltfExporter = new THREE.GLTFExporter();
     var options = {
         trs: false,
@@ -1096,27 +1214,21 @@ function export_ring(ring, index, oldmat) {
         forcePowerOfTwoTextures: false
     };
 
-    gltfExporter.parse(ring, function (result) {
-        // data = JSON.stringify(result, null, 2);
-        ////console.log(output);
-        ////saveString(output, 'scene.gltf');
+    gltfExporter.parse(atmoobj, function (result) {
         var output = JSON.stringify(result, null, 2);
-        var blob = new Blob([output], { type: 'text/plain' });
-        var href = URL.createObjectURL(blob);
-
+        var atmoinformation = JSON.stringify(shaderinfo, null, 2);
         $.ajax({
             type: 'POST',
-            url: '/object_post.php',
-            data: { name: planetName + "Ring" + index.toString(), object: output },
-            dataType: 'json',
+            url: '/atmo_object_post.php',
+            data: { name: planetName, shaderinformation: atmoinformation, object: output },
             success: function (d) {
-                console.log('ring done');
+                console.log('atmo done');
             }
         });
 
     }, options);
 
-    ring.material = oldmat;
+    atmoobj.material = atmomat;
 }
 
 function saveString(text) {

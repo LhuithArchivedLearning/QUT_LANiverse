@@ -90,7 +90,7 @@ function DrawOrbit(planet, centre, currTimeD, auScale, color, i, max) {
                 centerOfOrbit.z + zh * auScale));
     }
 
-    lines.computeLineDistances();
+    //lines.computeLineDistances();
 
     var colors = ColorPalletes[randomRangeRound(0, ColorPalletes.length - 1)];
     moonorbit = new THREE.Line(lines,
@@ -100,36 +100,41 @@ function DrawOrbit(planet, centre, currTimeD, auScale, color, i, max) {
 
 }
 
-function CreateRockyBelt(ringData, centre, currTimeD, auScale, numAstos, ringObject, vertex_text, fragment_text, lightpos, list, colors) {
+function CreateRockyBelt(ringData, centre, currTimeD, auScale, numAstos, ringObject, vertex_text, fragment_text, lightpos, list, colors, palleteindex, ringnum) {
 
     var segmentCount = numAstos;
-    var radius = planetSize;
     var geometry = new THREE.PlaneGeometry(1, 1);
+    var material = new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+    });
+    var astoshaderinformationlist = [];
 
     for (var i = 0; i < segmentCount; i++) {
-
-        var texture = astroidSprites[Math.round(randomRange(0, astroidSprites.length - 1))];
+        
+        //console.log(colors);
+        var textureindex = Math.round(randomRange(0, astroidSprites.length - 1));
+        var texture = astroidSprites[textureindex];
+        var colorIndex = (randomRangeRound(0, colors.length - 1))
+        var grabcolor = colors[colorIndex].RGB;
         var uniform =
         {
             //colors[(randomRangeRound(0, colors.length - 1))
             texture: { type: "t", value: null },
-            color: { type: "vf3", value: colors[(randomRangeRound(0, colors.length - 1))].RGB },
+            color: { type: "vf3", value: grabcolor},
             lightpos: { type: 'v3', value: lightpos },
 
         };
         astoMaterial = new THREE.ShaderMaterial
-            ({
-
-                uniforms: THREE.UniformsUtils.merge([
-                    THREE.UniformsLib['lights'], uniform]),
-                vertexShader: vertex_text,
-                fragmentShader: fragment_text,
-                lights: true
-
-            });
-
-
-
+           ({
+        
+               uniforms: THREE.UniformsUtils.merge([
+                   THREE.UniformsLib['lights'], uniform]),
+               vertexShader: vertex_text,
+               fragmentShader: fragment_text,
+               lights: true
+            
+           });
+       
         astoMaterial.uniforms.texture.value = texture;
         var vector = returnOrbitionPosition(ringData, i, false, centre, true);
         var x = vector.x + randomRange(-10, 10);
@@ -138,8 +143,8 @@ function CreateRockyBelt(ringData, centre, currTimeD, auScale, numAstos, ringObj
 
         var asto = new THREE.Mesh(geometry, astoMaterial);
         asto.castShadow = true;
-        size = randomRange(4, 12);
-        asto.scale.set(size, size, 1);
+        astosize = randomRange(4, 12);
+        asto.scale.set(astosize, astosize, 1);
 
         var gyro = new THREE.Gyroscope();
         gyro.add(asto);
@@ -147,8 +152,13 @@ function CreateRockyBelt(ringData, centre, currTimeD, auScale, numAstos, ringObj
 
         ringObject.add(gyro);
         list.push(asto);
+
+        astoshaderinformationlist.push({ 
+            name:"Astoriod_"+ i.toString(), index:i, colorPalleteIndex:palleteindex, colorArrayIndex:colorIndex, 
+            color:[grabcolor.r, grabcolor.g, grabcolor.b], texture_index:textureindex, size:astosize, astomat:astoMaterial})
     }
 
+    export_rocky_ring(ringObject, ringnum, astoshaderinformationlist, numAstos);
 }
 
 

@@ -1,4 +1,5 @@
 <?php
+header_remove('Set-Cookie');
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -15,7 +16,7 @@ if ($conn->connect_error) {
 $sql = "CREATE TABLE Planetoid (
    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
    planetname VARCHAR(30) NOT NULL,
-   texture_00_url VARCHAR(30) NOT NULL,
+   texture_url VARCHAR(30) NOT NULL,
    object_url VARCHAR(30) NOT NULL,
    size FLOAT(128, 2) NOT NULL,
    tilt INT (128) NULL,
@@ -45,11 +46,24 @@ if ($conn->query($sql) === TRUE) {
     echo "Error creating table: " . $conn->error;
 }
 
+//sql to create table
+$sql = "CREATE TABLE Atmo (
+    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
+    planetname VARCHAR(30) NOT NULL,
+    object_url VARCHAR(30) NOT NULL,
+     )";
+ 
+ if ($conn->query($sql) === TRUE) {
+     echo "Table MyGuests created successfully";
+ } else {
+     echo "Error creating table: " . $conn->error;
+ }
+
 $sql = "CREATE TABLE Moon (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     planetname VARCHAR(30) NOT NULL, 
     moonname VARCHAR(30) NOT NULL,
-    texture_00_url VARCHAR(30) NOT NULL, 
+    texture_url VARCHAR(30) NOT NULL, 
     object_url FLOAT(128, 3) NOT NULL,
     radius FLOAT(128, 3) NOT NULL,
     tilt FLOAT(128, 3) NOT NULL,
@@ -79,7 +93,6 @@ if ($conn->query($sql) === TRUE) {
 //
 $sql = "CREATE TABLE Ring (
    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
-   texture_00_url VARCHAR(30) NOT NULL, 
    object_url FLOAT(128, 3) NOT NULL,
    radius FLOAT(128, 3) NOT NULL,
    tilt FLOAT(128, 3) NOT NULL,

@@ -1,8 +1,8 @@
 
 <?php
+header_remove('Set-Cookie');
 $name = $_POST['name'];
-$texture_00_url = $_POST['texture_00_url'];
-$texture_00 = $_POST['texture_00'];
+$texture_url = $_POST['texture_url'];
 $size = $_POST['size'];
 $Tilt = $_POST['Tilt'];
 $RotationPeriod = $_POST['RotationPeriod'];
@@ -12,7 +12,7 @@ $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "mydb";
-$texture_00_url = 'planetimg/'.$name.'.png';
+$texture_url = 'planets/images/'.$name.'.png';
 // Create connection
 
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -20,10 +20,8 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 } 
-$sql = "INSERT INTO Planetoid (planetname, texture_00_url, size, planetTilt, planetRotationPeriod, numMoons, numRings)
+$sql = "INSERT INTO Planetoid (planetname, texture_url, size, planetTilt, planetRotationPeriod, numMoons, numRings)
     VALUES ('$name', '$texture_00_url', '$size', '$Tilt', '$RotationPeriod', '$numMoons', '$numRings')";
-
-file_put_contents('planetimgs/'.$name.'.png', file_get_contents($texture_00));
 
 if ($conn->query($sql) === TRUE) {
     echo "document.getElementById('echo').innerHTML = 'Fart'";

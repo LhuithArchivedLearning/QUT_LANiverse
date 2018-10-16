@@ -1,7 +1,9 @@
 
 <?php
+header_remove('Set-Cookie');
 $name = $_POST['name'];
 $object = $_POST['object'];
+$texture = $_POST['image'];
 
 $servername = "localhost";
 $username = "root";
@@ -10,17 +12,30 @@ $dbname = "mydb";
 
 // Create connection
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} 
+if( is_dir('planets/'.$name.'/') === false ){
+    mkdir('planets/'.$name.'/', 7777); // Create Directory
+}
 
-$fh = fopen('objects/'.$name.'.gltf',"a");
+if( is_dir('planets/'.$name.'/Atmo') === false ){
+    mkdir('planets/'.$name.'/Atmo', 7777); // Create Directory
+}
+
+if( is_dir('planets/'.$name.'/img') === false ){
+    mkdir('planets/'.$name.'/img', 7777); // Create Directory
+}
+
+if( is_dir('planets/'.$name.'/Ring') === false ){
+    mkdir('planets/'.$name.'/Ring', 7777); // Create Directory
+}
+if( is_dir('planets/'.$name.'/Moon') === false ){
+    mkdir('planets/'.$name.'/Moon', 7777); // Create Directory
+}
+
+$fh = fopen('planets/'.$name.'/'.$name.'.gltf',"a");
 fwrite($fh,($object."\r\n")); // add newline for next time
 fclose($fh);
 
-//file_put_contents('objects/'.$name.'.txt', file_get_contents($object));
+file_put_contents('planets/'.$name.'/img/'.$name.'.png', file_get_contents($texture));
 
 if ($conn->query($sql) === TRUE) {
     echo "document.getElementById('echo').innerHTML = 'Fart'";
@@ -28,6 +43,6 @@ if ($conn->query($sql) === TRUE) {
     echo "document.getElementById('echo').innerHTML = 'Shit'";
 }
 
-$conn->close();
-    echo'egggg';
+usleep(1000);
+die();
 ?>
