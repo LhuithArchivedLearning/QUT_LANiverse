@@ -14,7 +14,6 @@
         overflow-x: hidden;
         overflow: hidden;
     }
-
     body {
         width: 100%;
         font-family: PixelText;
@@ -31,7 +30,9 @@
         padding: 0px 0px 0px 10px;
         /*fills the little gap*/
     }
-
+    .main {
+        z-index: 5;
+     }
     .h-adjust {
         height: 70px!important;
     }
@@ -239,19 +240,6 @@
         margin: 8px auto;
     }
 
-    input {
-        align-items: flex-start;
-        text-align: center;
-        cursor: default;
-        color: buttontext;
-        background-color: buttonface;
-        box-sizing: border-box;
-        padding: 2px 6px 3px;
-        border-width: 2px;
-        border-style: outset;
-        border-color: buttonface;
-        border-image: initial;
-    }
 
     .anchor {
         bottom: 0;
@@ -259,27 +247,11 @@
         width: 100%;
     }
 
-    .dg.main {
-        margin: auto;
-        height: 75px;
-    }
-
-    .dg.main .close-button {
-        display: none;
-    }
-
-    .dg .c {
-        width: 83%!important;
-    }
-
     .moveGUI li {
         padding: 0!important;
         float: none!important;
     }
 
-    .dg .has-slider input[type=text] {
-        width: 20%!important;
-    }
 
     .portfolio-body {
         margin: auto;
@@ -642,17 +614,6 @@
         right: 0;
     }
 
-    input {
-        -webkit-appearance: none;
-        padding: 0px 27px;
-        background-color: #2fa1d6;
-        margin: 5px;
-        border-radius: 5px;
-        border-width: 0px;
-        font-family: PixelText;
-        font-size: 55px;
-        color: #ffffff;
-    }
 
     #webGL-container div#heading-Container {
         left: 0;
@@ -685,13 +646,6 @@
         padding: 20px;
     }
 
-    .dg .slider {
-        width: 100%!important;
-    }
-
-    .dg .has-slider input[type=text] {
-        display: none;
-    }
 
     #webGL-container a {
         font-size: 45px;
@@ -1021,9 +975,6 @@
         padding: 10px 24px 0px 5px;
     }
 
-    .dg .property-name {
-        width: 17%!important;
-    }
 
     /*-----------------------------------------------------------------------------------*/
 
@@ -1068,20 +1019,6 @@
         .moveGUI {
             width: 100%!important;
             right: 1.6em;
-        }
-        .dg .cr.number {
-            width: 100%!important;
-        }
-        .dg.main .close-button {
-            display: none;
-        }
-        .dg.ac {
-            position: fixed;
-            top: 14%!important;
-            left: 50%!important;
-            right: 5%!important;
-            height: 0;
-            z-index: 0;
         }
         h2, h3, h4, h5, h6 {
             width: auto;

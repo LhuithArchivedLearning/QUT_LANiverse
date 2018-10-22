@@ -1,7 +1,7 @@
-function MapGenerator (octaves, persistance, lacunarity, seed, noiseScale, offset, size, isclouds)
+function MapGenerator (octaves, persistance, lacunarity, seed, noiseScale, offset, size, isclouds, regionspass, isGassyPass)
     {
 
-            regions = regionRoll(isclouds);
+            regions = regionspass;//regionRoll(isclouds);
             var colorMap = new Array();
             var clampedMap = new Array();
             var regions;
@@ -12,7 +12,10 @@ function MapGenerator (octaves, persistance, lacunarity, seed, noiseScale, offse
             var imagedata;
             var index = 0;
             var finalmap = new Array();
-        
+            
+            //Bandaid fix ;)
+            regions.isGassy = isGassyPass;
+
         if(regions.customUrl == '')
         {
             for(var x = 0; x < size; x++)

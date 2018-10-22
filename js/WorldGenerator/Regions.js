@@ -50,14 +50,15 @@ function regionRoll (isclouds)
 }
 
 
-function CreateRegion()
+function CreateRegion(index)
 {
-    var colors = ColorPalletes[Math.round(randomRange(1, ColorPalletes.length -1))];
+    var colors = ColorPalletes[Math.round(index)];
     //var colors =  ColorPalletes[ColorPalletes.length -1];
-    var numRegions = randomRange(colors.length,colors.length); // Expand later
+    var numRegions = randomRange(colors.length, colors.length); // Expand later
     var data = [];
     var prevoisLevel;
     var currentLevel = randomRange(0.04, 0.3);
+
     for(var i = 0; i < numRegions; i++)
     {
         if(i == 0)

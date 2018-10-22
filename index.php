@@ -37,6 +37,7 @@
 	<script type="text/javascript" src="js/THREE/Gyroscope.js"></script>
 	<script type="text/javascript" src="js/THREE/OBJExporter.js"></script>
 	<script type="text/javascript" src="js/THREE/GLTFExporter.js"></script>
+	<script type="text/javascript" src="js/THREE/dat.gui.min.js"></script>
 	<script type="text/javascript" src="js/THREE/WebGL.js"></script>
 
 	<!--Post Processing Stuff -->
@@ -57,7 +58,7 @@
 	<script type="text/javascript" src="js/Loaders.js"></script>
 	<script type="text/javascript" src="js/LaberGenerator.js"></script>
 	<script type="text/javascript" src="js/GibbirishGenerator.js"></script>
-
+	<script type="text/javascript" src="js/Helpers/seedrandom.min.js"></script>
 	<!-- World Generator -->
 	<script type="text/javascript" src="js/WorldGenerator/FallOffGenerator.js"></script>
 	<script type="text/javascript" src="js/WorldGenerator/MapGenerator.js"></script>
@@ -93,7 +94,7 @@
 		</div>
 	</div>
 	<footer id ="foot" class="page-footer gold footer-body padding-10 ">
-	   	<!--<h6 class="t-align-c" id='echo'><?php include ('database.php');?> </h6>-->
+	   	<h6 class="t-align-c" id='echo'><?php include ('database.php');?> </h6>
 		<h6 class="t-align-c">Created using THREE.js </h6>
 	</footer>
 </body>

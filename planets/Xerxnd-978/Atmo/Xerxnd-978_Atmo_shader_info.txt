@@ -1,8 +1,0 @@
-{
-  "colorLight": 0,
-  "colorDark": 0,
-  "fresnel": 0.4759160879698138,
-  "transitionWidth": 0.014716318803315974,
-  "thickness": 1.3641426954797007,
-  "size": 48.43040820432303
-}

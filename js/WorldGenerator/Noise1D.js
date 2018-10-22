@@ -3,7 +3,7 @@
     {
         var  noiseMap =  new Array();
         
-        var prng = Math.random(seed);
+        var prng = new PRNGRandom(seed);//Math.random(seed);
 
         var octaveOffsets = new Array(octaves);
         
@@ -13,8 +13,8 @@
 
         for(var i = 0; i < octaves; i ++)
         {
-            var offsetX = randomRange(-100000, 100000) + offset.x;
-            var offsetY = randomRange(-100000, 100000) - offset.y;
+            var offsetX = prng.next(-100000, 100000) + offset.x;
+            var offsetY = prng.next(-100000, 100000) - offset.y;
             octaveOffsets[i] = new Vector2 (offsetX, offsetY);
             
             maxPossibleHeight += amplitude;

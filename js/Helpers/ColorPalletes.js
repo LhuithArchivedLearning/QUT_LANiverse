@@ -1,6 +1,5 @@
 var ColorPalletes =
 [
-
     cloudColors = 
     [
     new ColorData (0x000000, new THREE.Color(0, 0, 0)),
