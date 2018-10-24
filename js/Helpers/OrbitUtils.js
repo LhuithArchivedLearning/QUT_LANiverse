@@ -91,10 +91,10 @@ function DrawOrbit(planet, centre, currTimeD, auScale, color, i, max) {
     }
 
     //lines.computeLineDistances();
-
-    var colors = ColorPalletes[randomRangeRound(0, ColorPalletes.length - 1)];
+    //colors[randomRangeRound(0, colors.length - 1)].hex
+    //var colors = color;//ColorPalletes[randomRangeRound(0, ColorPalletes.length - 1)];
     moonorbit = new THREE.Line(lines,
-        new THREE.MeshBasicMaterial({ color: colors[randomRangeRound(0, colors.length - 1)].hex, transparent: true, opacity: 1.0 }));
+        new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 1.0 }));
 
     return moonorbit;
 

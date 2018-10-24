@@ -8,7 +8,7 @@ varying vec2 vUv;
 varying vec3 vecNormal;
 varying vec3 vWorldPosition;
 uniform int noTexture;
-uniform vec4 customColor;
+uniform vec3 customColor;
 uniform int customColorSwitch;
 
 		//Refer the Text Parse in Main.js, replaced this Sexy Text with Dither Methods,
@@ -44,18 +44,18 @@ uniform int customColorSwitch;
 			vec3 shadowVal = vec3(shadowValue,shadowValue,shadowValue);
 			vec4 shadowDither = vec4(dither(shadowVal), 1.0);
 			vec4 light = vec4(dither(sumDirLights), 1.0);
-			vec4 color;
+			vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
+
+			vec4 tex = texture2D(texture, vUv);
+
+
+			color = vec4(1.0, 1.0, 1.0, 1.0) * tex;
 
 			if(customColorSwitch == 1)
 			{
-				color = customColor;
-			}
-			else
-			{
-				color = vec4(1.0, 1.0, 1.0, 1.0);
+				color = vec4(customColor.rgb, 1.0);
 			}
 
-			vec4 tex = texture2D(texture, vUv);
 			
-			gl_FragColor = color * (tex) * (shadowDither) * vec4(light.rgb,1.0);
+			gl_FragColor = color * (shadowDither) * vec4(light.rgb,1.0);
 		}

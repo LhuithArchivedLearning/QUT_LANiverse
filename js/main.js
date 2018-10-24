@@ -5,10 +5,14 @@ var lightpos, dirLight, angle;
 
 var options, regions, gui_color_event_list = [];
 var gui_range_event_list = [];
-
+var moon_params_list = [];
+var moon_event_list = [];
+var ring_params_list = [];
 var atmo_gen_gui, planet_colors_gui, planet_colors_gui, planet_gen_gui;
 var moons_gen_gui, rings_gen_gui;
-
+var moon_region_info;
+var moons_gen_gui_list = [];
+var moon_params;
 var persistance_event, lacunarity_event, octaves_event, noiseScale_event;
 var numberOfMoons_event, planetRotationPeriod_event, numberOfRings_event;
 var planetTilt_event, planetSize_event, hasRings_event, isGassy_event, seed_event, name_event;
@@ -88,8 +92,8 @@ var planetUniform =
     texture: { type: "t", value: null },
     lightpos: { type: 'v3', value: new THREE.Vector3(0, 30, 20) },
     noTexture: { type: "i", value: 0 },
-    customColorSwitch: { type: "i", value: 1 },
-    customColor: { type: "i", value: new THREE.Vector4(.48, .89, .90, 1) }
+    customColorSwitch: { type: "i", value: 0 },
+    customColor:  { type: "v3", value: new THREE.Vector3(1, 1, 1) },
 };
 
 var ringUniform =
@@ -161,9 +165,10 @@ function init() {
     camera = new THREE.OrthographicCamera(
         window.innerWidth / - 2, window.innerWidth / 2,
         window.innerHeight / 2, window.innerHeight / - 2,
-        - 500, 4000);
+        - 500, 10000 );
 
     camera.position.y = -40;
+    camera.naer = 0.001;
     container = document.getElementById('webGL-container');
     document.body.appendChild(container);
 
@@ -195,7 +200,7 @@ function init() {
     var vector = new THREE.Vector3(750, 500, 1000);
     dirLight.position.set(vector);
 
-    dirLight.shadow.camera.near = 0.01;
+    dirLight.shadow.camera.near = 0.001;
     dirLight.castShadow = true;
 
     var d = 550;
@@ -250,7 +255,8 @@ function init() {
         this.yPos = vector.y;
         this.zPos = vector.z;
     }
-    var gui = new dat.GUI();
+
+    gui = new dat.GUI();
 
 
     //console.log(regions);
@@ -258,6 +264,10 @@ function init() {
     var namegrab = word(randomRange(3, 25));
     var palletei = Math.round(randomRange(1, ColorPalletes.length - 1));
     regions = CreateRegion(palletei);
+    var moons = Math.round(randomRange(1, 6));
+    var planetsize = randomRange(1, 250);
+        
+
 
     planet_params = {
         name: (randomRange(0, 10) > 5) ? namegrab + "-" + Math.round(randomRange(0, 1000)) : namegrab, //randomRange(0.65, 0.85)
@@ -265,35 +275,103 @@ function init() {
         lacunarity: randomRange(0.1, 1.5), //randomRange(1.90, 2.20)
         octaves: Math.round(randomRange(1, 6)), //randomRange(4, 6)
         noiseScale: randomRange(0.1, 3),
-        numberOfMoons: Math.round(randomRange(1, 6)),
+        numberOfMoons: moons,
         numberOfRings: Math.round(randomRange(1, 6)),
         planetTilt: randomRange(-55, 55),
-        planetSize: randomRange(1, 300),
+        planetSize: planetsize,
         planetRotationPeriod: Math.round(randomRange(0.1, 100)),
         seed: Math.round(randomRange(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER)),
         ColorPalleteIndex: palletei,
         hasRings: (randomRange(0, 10) >= 5) ? true : false,
         isGassy: (randomRange(0, 10) >= 8.5) ? true : false,
-
+        addMoon: function () {
+            if( planet_params.numberOfMoons < 6){
+            planet_params.numberOfMoons ++;
+            moon_params_list.push({
+                name:  (randomRange(0, 10) > 5) ? word(randomRange(3, 25)) + "-" + Math.round(randomRange(0, 1000)) : word(randomRange(3, 25)),
+                radius: 1.5424, 
+                i1: randomRange(-60, 60), 
+                a1: randomRange(0.1,  0.25),
+                moonSize: randomRange(1, 20),
+                selected: false,
+                orbitSpeedMult: (randomRange(-2, 2) == 0) ? 1 : randomRange(-2, 2), 
+                orbitcolor: mooncolgrab[randomRangeRound(0, mooncolgrab.length - 1)].hex,
+                mooncolor:  mooncolgrab[randomRangeRound(0, mooncolgrab.length - 1)].hex,
+                index: 1,
+    
+                randomize: function () {
+                    i1 = randomRange(-60, 60); 
+                    a1 = randomRange(0.1,  0.25),
+                    moonSize = randomRange(1, 20),
+                    orbitSpeedMult = (randomRange(-2, 2) == 0) ? 1 : randomRange(-2, 2);  
+                    text = false,
+                    orbitcolor = mooncolgrab[randomRangeRound(0, mooncolgrab.length - 1)].hex;
+                    mooncolor=  mooncolgrab[randomRangeRound(0, mooncolgrab.length - 1)].hex;
+                },
+            });
+            ReloadMoonFolder();
+            ReloadRegionMap();
+            Reload();
+        }
+        },
+        removeMoon: function () {
+            if( planet_params.numberOfMoons > 1){
+            planet_params.numberOfMoons --;
+            moon_params_list.pop();
+            ReloadMoonFolder();
+            ReloadRegionMap();
+            Reload();
+            }
+        },
         randomize: function () {
             var namegrab = word(randomRange(3, 25));
             var palletei = Math.round(randomRange(1, ColorPalletes.length - 1));
+            var moons = Math.round(randomRange(1, 6));
+            var planetsize = randomRange(1, 250);
 
             this.name = (randomRange(0, 10) > 5) ? namegrab + "-" + Math.round(randomRange(0, 1000)) : namegrab;
             this.persistance = randomRange(0.1, 2.85);
             this.lacunarity = randomRange(0.1, 1.5);
             this.octaves = Math.round(randomRange(1, 6));
             this.noiseScale = randomRange(0.1, 3);
-            this.numberOfMoons = Math.round(randomRange(1, 6));
+            this.numberOfMoons = moons;
             this.numberOfRings = Math.round(randomRange(1, 6));
             this.planetTilt = randomRange(-55, 55);
-            this.planetSize = randomRange(40, 110);
+            this.planetSize = planetsize;
             this.planetRotationPeriod = Math.round(randomRange(0.1, 100));
             this.seed = Math.round(randomRange(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER));
             this.hasRings = (randomRange(0, 10) >= 5) ? true : false;
             this.isGassy = (randomRange(0, 10) >= 8.5) ? true : false;
             this.ColorPalleteIndex = palletei;
+            
+            moon_params_list =[];
+            var mooncolgrab = ColorPalletes[randomRangeRound(0, ColorPalletes.length - 1)];
+            for(var i = 0; i < moons; i++){
+                moon_params_list.push({
+                    name:  (randomRange(0, 10) > 5) ? word(randomRange(3, 25)) + "-" + Math.round(randomRange(0, 1000)) : word(randomRange(3, 25)),
+                    radius: 1.5424, 
+                    i1: randomRange(-60, 60), 
+                    a1: randomRange(0.1,  0.25),
+                    moonSize: randomRange(1, 20),
+                    selected: false,
+                    orbitSpeedMult: (randomRange(-2, 2) == 0) ? 1 : randomRange(-2, 2), 
+                    orbitcolor: mooncolgrab[randomRangeRound(0, mooncolgrab.length - 1)].hex,
+                    mooncolor:  mooncolgrab[randomRangeRound(0, mooncolgrab.length - 1)].hex,
+                    index: 1,
+        
+                    randomize: function () {
+                        i1 = randomRange(-60, 60); 
+                        a1 =  randomRange(0.1,  0.25),
+                        moonSize = randomRange(1, 20),
+                        orbitSpeedMult = (randomRange(-2, 2) == 0) ? 1 : randomRange(-2, 2);  
+                        text = false,
+                        orbitcolor = mooncolgrab[randomRangeRound(0, mooncolgrab.length - 1)].hex;
+                        mooncolor= mooncolgrab[randomRangeRound(0, mooncolgrab.length - 1)].hex;
+                    },
+                });
+            }
 
+            ReloadMoonFolder();
             ReloadRegionMap();
             Reload();
             // planet_range_gui.open();
@@ -312,7 +390,32 @@ function init() {
             //updateDisplay(gui);
         },
     };
+    var mooncolgrab = ColorPalletes[randomRangeRound(0, ColorPalletes.length - 1)];
+    for(var i = 0; i < moons; i++){
+        moon_params_list.push({
+            name:  (randomRange(0, 10) > 5) ? word(randomRange(3, 25)) + "-" + Math.round(randomRange(0, 1000)) : word(randomRange(3, 25)),
+            radius: 1.5424, 
+            i1: randomRange(-60, 60), 
+            a1:  randomRange(0.1,  0.25),
+            moonSize: randomRange(1, 20),
+            selected: false,
+            orbitSpeedMult: (randomRange(-2, 2) == 0) ? 1 : randomRange(-2, 2), 
+            orbitcolor: mooncolgrab[randomRangeRound(0, mooncolgrab.length - 1)].hex,
+            mooncolor: mooncolgrab[randomRangeRound(0, mooncolgrab.length - 1)].hex,
+            index: 1,
 
+            randomize: function () {
+                i1 = randomRange(-60, 60); 
+                a1 =  randomRange(0.1,  0.25),
+                moonSize = randomRange(1, 20),
+                orbitSpeedMult = (randomRange(-2, 2) == 0) ? 1 : randomRange(-2, 2);  
+                text = false,
+                orbitcolor = mooncolgrab[randomRangeRound(0, mooncolgrab.length - 1)].hex;
+                mooncolor = mooncolgrab[randomRangeRound(0, mooncolgrab.length - 1)].hex;
+            },
+        });
+    }
+    
     colgrab = ColorPalletes[randomRangeRound(0, ColorPalletes.length - 1)],
         atmo_params = {
             fresnel: randomRange(0.10, 1.99),
@@ -325,7 +428,7 @@ function init() {
             randomize: function () {
                 colgrab = ColorPalletes[randomRangeRound(0, ColorPalletes.length - 1)],
 
-                    this.fresnel = randomRange(0.10, 1.99);
+                this.fresnel = randomRange(0.10, 1.99);
                 this.transwidth = randomRange(0.01, 0.05);
                 this.thickness = randomRange(0.01, 3.00);
                 this.atmosize = randomRange(1.02, 1.2);
@@ -334,24 +437,64 @@ function init() {
                 this.colorsRGBDark = colgrab[randomRangeRound(0, colgrab.length - 1)].hex;
             }
         }
+    
+        //Parametres for a single Moon, then add to moon folder, and read from moon folder (ouch)
+
+        size = randomRange(1, Math.round(planetSize / 4));
+        orbitspeed = randomRange(-2, 2);
+        orbitspeed = (orbitspeed == 0) ? 1 : orbitspeed;
+        var mooncolgrab = ColorPalletes[randomRangeRound(0, ColorPalletes.length - 1)];
+        for(var i = 0; i < planet_params.numberOfMoons; i++){
+            moon_params_list.push({
+                name:  (randomRange(0, 10) > 5) ? word(randomRange(3, 25)) + "-" + Math.round(randomRange(0, 1000)) : word(randomRange(3, 25)),
+                radius: 1.5424, 
+                i1: randomRange(-60, 60), 
+                a1:  randomRange(0.1,  0.25),
+                moonSize: randomRange(1, 20),
+                selected: false,
+                orbitSpeedMult: (randomRange(-2, 2) == 0) ? 1 : randomRange(-2, 2), 
+                orbitcolor: mooncolgrab[randomRangeRound(0, mooncolgrab.length - 1)].hex,
+                mooncolor: mooncolgrab[randomRangeRound(0, mooncolgrab.length - 1)].hex,
+                index: 1,
+    
+                randomize: function () {
+                    i1 = randomRange(-60, 60); 
+                    a1 =  randomRange(0.1,  0.25),
+                    moonSize = randomRange(1, 20),
+                    orbitSpeedMult = (randomRange(-2, 2) == 0) ? 1 : randomRange(-2, 2);  
+                    text = false,
+                    orbitcolor = mooncolgrab[randomRangeRound(0, mooncolgrab.length - 1)].hex;
+                    mooncolor= mooncolgrab[randomRangeRound(0, mooncolgrab.length - 1)].hex;
+                },
+            });
+        }
+    
 
     planet_gen_gui = gui.addFolder('Planet Parameters');
     name_event = planet_gen_gui.add(planet_params, 'name').name('name').listen();
+    name_event.domElement.style.pointerEvents = "defualt"
     persistance_event = planet_gen_gui.add(planet_params, 'persistance', 0.1, 2.85).name('persistance').listen();;
     lacunarity_event = planet_gen_gui.add(planet_params, 'lacunarity', 0.1, 1.5).name('lacunarity').listen();;
     octaves_event = planet_gen_gui.add(planet_params, 'octaves', 1, 6).name('octaves').listen();
     noiseScale_event = planet_gen_gui.add(planet_params, 'noiseScale', 0.1, 3).name('noiseScale').listen();
-    numberOfMoons_event = planet_gen_gui.add(planet_params, 'numberOfMoons', 1, 6).name('#Moons').listen();
+    numberOfMoons_event = planet_gen_gui.add(planet_params, 'numberOfMoons', parseInt(1), parseInt(6)).name('#Moons').listen().step(1);
+    
+    numberOfMoons_event.domElement.style.pointerEvents = "none"
+    numberOfMoons_event.domElement.style.opacity = .5;
+
     planetRotationPeriod_event = planet_gen_gui.add(planet_params, 'planetRotationPeriod', 0.1, 100).name('Rotation').listen();
     numberOfRings_event = planet_gen_gui.add(planet_params, 'numberOfRings', 1, 6).name('#Rings').listen();
     planetTilt_event = planet_gen_gui.add(planet_params, 'planetTilt', -55, 55).name('Tilt').listen();
-    planetSize_event = planet_gen_gui.add(planet_params, 'planetSize', 1, 300).name('Size').listen();
+    planetSize_event = planet_gen_gui.add(planet_params, 'planetSize', 1, 250).name('Size').listen();
     hasRings_event = planet_gen_gui.add(planet_params, 'hasRings').name('hasRings').listen();
     isGassy_event = planet_gen_gui.add(planet_params, 'isGassy').name('isGassy').listen();
     seed_event = planet_gen_gui.add(planet_params, 'seed', Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER).name('Seed').listen();
     ColorPalleteIndex_event = planet_gen_gui.add(planet_params, 'ColorPalleteIndex', 1, ColorPalletes.length - 1).name('Pallette Index').listen();
-    planet_gen_gui.add(planet_params, 'randomize');
+    
 
+    planet_gen_gui.add(planet_params, 'randomize');
+    planet_gen_gui.add(planet_params, 'addMoon');
+    planet_gen_gui.add(planet_params, 'removeMoon');
 
     atmo_gen_gui = gui.addFolder('Atmosphere Parameters');
     fresnel_event = atmo_gen_gui.add(atmo_params, 'fresnel', 0.10, 1.99).name('fresnel').listen();
@@ -361,11 +504,7 @@ function init() {
     colorsRGBLight_event = atmo_gen_gui.addColor(atmo_params, 'colorsRGBLight').name('Light').listen();
     colorsRGBDark_event = atmo_gen_gui.addColor(atmo_params, 'colorsRGBDark').name('Dark').listen();
 
-    moons_gen_gui = gui.addFolder('Moons Parameters');
-
     rings_gen_gui = gui.addFolder('Rings Parameters');
-
-
     planet_colors_gui = planet_gen_gui.addFolder('ColorMap');
 
     gui_color_event_list = [];
@@ -374,10 +513,29 @@ function init() {
     }
 
     planet_range_gui = planet_gen_gui.addFolder('Ranges');
-    console.log(regions);
     gui_range_event_list = [];
+    
     for (var i = 0; i < regions.Data.length; i++) {
         gui_range_event_list.push(planet_range_gui.add(regions.Data[i], 'height').name(i.toString()).listen());
+    }
+
+
+    moons_gen_gui = gui.addFolder('Moons Parameters');
+
+    for(var i = 0; i < moons; i++){
+            
+        moons_gen_gui_list[i] = moons_gen_gui.addFolder('Moons ' + i.toString());
+
+        moon_event_list.push(
+            moons_gen_gui_list[i].add(moon_params_list[i], 'name'),
+            moons_gen_gui_list[i].add(moon_params_list[i], 'i1', -60, 60).name('I1'), 
+            moons_gen_gui_list[i].add(moon_params_list[i],'a1', 0.1,  0.25).name('Orbit Diameter'),
+            moons_gen_gui_list[i].add(moon_params_list[i],'moonSize', 1, 20).name('size'), 
+            moons_gen_gui_list[i].add(moon_params_list[i], 'orbitSpeedMult' , -2, 2).name('orbit speed'), 
+            moons_gen_gui_list[i].addColor(moon_params_list[i], 'orbitcolor'),
+            moons_gen_gui_list[i].addColor(moon_params_list[i], 'mooncolor'),
+            );
+
     }
 
     //planet_colors_gui.open();
@@ -398,6 +556,43 @@ function init() {
         composer.setSize(window.innerWidth, window.innerHeight);
 }
 
+
+
+function ReloadMoonFolder(){
+
+    //planet_gen_gui.removeFolder('ColorMap');
+    for (var i = 0; i < moons_gen_gui_list.length; i++) {
+        moons_gen_gui.removeFolder(moons_gen_gui_list[i]);
+    }
+
+    gui.removeFolder(moons_gen_gui);
+
+    moons_gen_gui = gui.addFolder('Moons Parameters');
+    moons_gen_gui_list = [];
+
+    for(var i = 0; i < planet_params.numberOfMoons; i++){
+
+        moons_gen_gui_list[i] = moons_gen_gui.addFolder('Moons ' + i.toString());
+
+        moon_event_list.push(
+            moons_gen_gui_list[i].add(moon_params_list[i], 'name'),
+            moons_gen_gui_list[i].add(moon_params_list[i], 'i1', -60, 60).name('I1'), 
+            moons_gen_gui_list[i].add(moon_params_list[i],'a1', 0.1,  0.25).name('a1'),
+            moons_gen_gui_list[i].add(moon_params_list[i],'moonSize', 1, 20).name('size'), 
+            moons_gen_gui_list[i].add(moon_params_list[i], 'orbitSpeedMult' , -2, 2).name('orbit speed'), 
+            moons_gen_gui_list[i].addColor(moon_params_list[i], 'orbitcolor'),
+            moons_gen_gui_list[i].addColor(moon_params_list[i], 'mooncolor'),
+            );
+            moons_gen_gui_list[i].open();
+    }
+
+    for (var i = 0; i < moon_event_list.length; i++) {
+        moon_event_list[i].onChange(function (value) {
+            Reload();
+        });
+    }
+}
+
 function ReloadRegionMap() {
     
     regions = CreateRegion(planet_params.ColorPalleteIndex);
@@ -406,6 +601,7 @@ function ReloadRegionMap() {
     for (var i = 0; i < gui_color_event_list.length; i++) {
         //gui_color_event_list.push(planet_colors_gui.addColor(regions.ColorPallette[i], 'hex').name(i.toString()).listen());
         //delete gui_color_event_list[i];
+
         planet_colors_gui.remove(gui_color_event_list[i]);
     }
     planet_gen_gui.removeFolder(planet_colors_gui);
@@ -449,18 +645,6 @@ function ReloadRegionMap() {
 
 function OnChangeEvents() {
 
-    for (var i = 0; i < gui_color_event_list.length; i++) {
-        gui_color_event_list[i].onChange(function (value) {
-            Reload();
-        });
-    }
-
-
-    for (var i = 0; i < gui_range_event_list.length; i++) {
-        gui_range_event_list[i].onChange(function (value) {
-            Reload();
-        });
-    }
 
     persistance_event.onChange(function (value) {
         Reload();
@@ -477,6 +661,12 @@ function OnChangeEvents() {
 
     for (var i = 0; i < gui_range_event_list.length; i++) {
         gui_range_event_list[i].onChange(function (value) {
+            Reload();
+        });
+    }
+
+    for (var i = 0; i < moon_event_list.length; i++) {
+        moon_event_list[i].onChange(function (value) {
             Reload();
         });
     }
@@ -863,7 +1053,7 @@ function CalculateParametres(vertex_text, fragment_text) {
     lacunarity = planet_params.lacunarity;//randomRange(1.9, 2.2);
     octaves = Math.round(planet_params.octaves);//Math.round(randomRange(4, 6));
     noiseScale = planet_params.noiseScale;//randomRange(10, 200);
-    moonListsize = Math.round(planet_params.numberOfMoons);//Math.round(randomRange(1, 4))
+    moonListsize = planet_params.numberOfMoons;//Math.round(randomRange(1, 4))
     ringlistsize = Math.round(planet_params.numberOfRings);//Math.round(randomRange(1, 4));
     moonList = new Array(moonListsize);
     planetTilt = planet_params.planetTilt;//randomRange(-55, 55);
@@ -1038,7 +1228,7 @@ function InitializeRingsData(ringsList) {
     }
 
 }
-
+//--------------------------------------------MOON CREATE-------------------------------------------------------\\
 function InitializeMoonData(moonList, vertex_text, fragment_text) {
     for (var i = 0; i < moonList.length; i++) {
         var roll = randomRange(0, 10);
@@ -1048,18 +1238,34 @@ function InitializeMoonData(moonList, vertex_text, fragment_text) {
         orbitspeed = randomRange(-2, 2);
         orbitspeed = (orbitspeed == 0) ? 1 : orbitspeed;
 
-        moonData = createPlantiodData(octaves, persistance, lacunarity,
-            seed, 128, offset, 24);
+        //moon_colors = 
+        //[
+        //    new ColorData (moon_params_list[i].color, new THREE.Color( 0, 140, 255   )),
+        //    new ColorData (moon_params_list[i].color, new THREE.Color( 102, 179, 255 )),
+        //    new ColorData (moon_params_list[i].color, new THREE.Color( 255, 204, 102 )),
+        //    new ColorData (moon_params_list[i].color, new THREE.Color( 177,223,142  )  ),
+        //    new ColorData (moon_params_list[i].color, new THREE.Color( 201, 158, 29 )),
+        //    new ColorData (moon_params_list[i].color, new THREE.Color( 242, 242, 242)),
+        //];
+//
+        //moon_region_info = new RegionInformation
+        //(
+        //    moon_colors , "" ,
+        //    0, 0, true, "",  3, ''
+        //);
+        
+        //moonData = createPlantiodData(octaves, persistance, lacunarity,
+        //    seed, 128, offset, 24);
 
         moonMaterial = PlanetMaterial.clone();
 
-
-        moonMaterial.uniforms.texture.value = moonData.map;
+        var moonCol = new THREE.Color(moon_params_list[i].mooncolor);
+        moonMaterial.uniforms.customColorSwitch.value = 1;
+        moonMaterial.uniforms.customColor.value = new THREE.Vector3(moonCol.r, moonCol.g, moonCol.b);;
         mat = moonMaterial;
 
         moonList[i] =
             {
-
                 //Again Much Credit To The Folks At Qt:
                 //https://doc.qt.io/qt-5/qt3d-planets-qml-planets-js.html 
                 //Smexcity !!!
@@ -1078,14 +1284,16 @@ function InitializeMoonData(moonList, vertex_text, fragment_text) {
                 //i1: 115.1454
 
                 radius: 1.5424, tilt: 0, N1: 125.1228, N2: 0,
-                i1: randomRange(-60, 60), i2: 0, w1: 318.0634, w2: 0.1643573223,
-                a1: randomRange(planetSize / 1000 + .02, 0.32), a2: 0, e1: 0, e2: 0,
-                M1: 115.3654, M2: 13.0649929509, period: 1, moonSize: size,
-                moonObject: createMoon(size, mat), material: mat, selected: false,
-                moonOrbit: 0, orbitSpeedMult: orbitspeed, inMoon: false, text: false
+                i1: moon_params_list[i].i1, i2: 0, w1: 318.0634, w2: 0.1643573223,
+                a1: moon_params_list[i].a1 * planet_params.planetSize/75, a2: 0, e1: 0, e2: 0,
+                M1: 115.3654, M2: 13.0649929509, period: 1, moonSize: moon_params_list[i].moonSize * planet_params.planetSize/100,
+                moonObject: createMoon(moon_params_list[i].moonSize * planet_params.planetSize/100, mat), material: mat, selected: false,
+                moonOrbit: 0, orbitSpeedMult: moon_params_list[i].orbitSpeedMult, inMoon: false, text: false
             }
     }
 }
+//--------------------------------------------MOON CREATE-------------------------------------------------------\\
+
 
 function TargetUI() {
     targetBox.bottomR = generateImageUi(new THREE.Vector3(0, 0, 0)
@@ -1105,6 +1313,8 @@ function TargetUI() {
     targetBox.topL.updatePosition(1, 500, 500);
 }
 
+
+//--------------------------------------------STAR BACKGORUND CREATE-------------------------------------------------------\\
 function setUpSky(start, vertex_text, fragment_text) {
     var skyMaterial = new THREE.ShaderMaterial(
         {
@@ -1125,7 +1335,9 @@ function setUpSky(start, vertex_text, fragment_text) {
     skyboxuniforms.resolution.value.x = window.innerWidth;
     skyboxuniforms.resolution.value.y = window.innerHeight;
 }
+//--------------------------------------------STAR BACKGORUND CREATE-------------------------------------------------------\\
 
+//--------------------------------------------ATMO CREATE-------------------------------------------------------\\
 function createAtmos(colors, vertex_text, fragment_text) {
     if (atmo !== undefined) {
         MainScene.remove(atmo);
@@ -1175,7 +1387,9 @@ function createAtmos(colors, vertex_text, fragment_text) {
     atmosphereshaderinfo = { colorLight: colorsRGBLight, colorDark: colorsRGBDark, fresnel: fresnel, transitionWidth: transwidth, thickness: thickness, size: atmosize };
     //export_atm(atmo, atmoMaterial, atmosphereshaderinfo);
 }
+//--------------------------------------------ATMO CREATE-------------------------------------------------------\\
 
+//--------------------------------------------GARBAGE DUMP-------------------------------------------------------\\
 function RemoveOldShizz() {
     if (planet !== undefined) {
         doDispose(planet);
@@ -1223,7 +1437,9 @@ function RemoveOldShizz() {
         textureList = [];
     }
 }
+//--------------------------------------------GARBAGE DUMP-------------------------------------------------------\\
 
+//--------------------------------------------PLANET CREATE-------------------------------------------------------\\
 function createPlanet(start, vertex_text, fragment_text) {
 
     if (planet !== undefined) {
@@ -1243,8 +1459,8 @@ function createPlanet(start, vertex_text, fragment_text) {
             lights: true
         });
         //TargetUI();
-        refreshPlanetButton = generateButtonUi(new THREE.Vector3(0, 0, 0)
-            , "110px", -1000, "img/Icons/Refresh.png", "Ui-Label", "Refresh");
+        //refreshPlanetButton = generateButtonUi(new THREE.Vector3(0, 0, 0)
+        //    , "110px", -1000, "img/Icons/Refresh.png", "Ui-Label", "Refresh");
         showPlanetButton = generateButtonUi(new THREE.Vector3(0, 0, 0)
             , "110px", -1000, "", "Ui-Label", "Show");
     }
@@ -1288,16 +1504,17 @@ function createPlanet(start, vertex_text, fragment_text) {
     else {
         createAtmos(planetData.colors, ShaderLoadList.atmo.vertex, ShaderLoadList.atmo.fragment);
     }
-
+//planetData.colors
     for (var i = 0; i < moonList.length; i++) {
         moonList[i].moonOrbit = DrawOrbit(moonList[i], new THREE.Vector3(0, 0, 0),
-            clock.getElapsedTime(), 1000, planetData.colors, i, moonList.length);
+            clock.getElapsedTime(), 1000,  moon_params_list[i].orbitcolor, i, moonList.length);
         MainScene.add(moonList[i].moonObject);
 
         if (moonList[i].moonOrbit != 0)
             MainScene.add(moonList[i].moonOrbit);
 
-        moonList[i].text = generateName(moonList[i].moonObject, "35px", -1000, false);// generateName(planet, "35px", -1000);
+        moonList[i].text = generateName(moonList[i].moonObject, "35px", -1000, false, "", "", 
+        moon_params_list[i].name);// generateName(planet, "35px", -1000);
     }
 
     //var roll = randomRange(0, 10);
@@ -1332,7 +1549,10 @@ function createPlanet(start, vertex_text, fragment_text) {
     // P//ostPLanetInformation(planetData.map, planet);
     //planet.material = PlanetMaterial;
 }
+//--------------------------------------------PLANET CREATE-------------------------------------------------------\\
 
+
+//--------------------------------------------PLANET POST-------------------------------------------------------\\
 function PostPLanetInformation(map, planetobject) {
     // create off-screen canvas element
     var canvastest = document.createElement('canvas'),
@@ -1386,7 +1606,9 @@ function PostPLanetInformation(map, planetobject) {
         }
     });
 }
+//--------------------------------------------PLANET POST-------------------------------------------------------\\
 
+//--------------------------------------------PLANET OBJECT POST-------------------------------------------------------\\
 function export_object(object, image) {
 
     var gltfExporter = new THREE.GLTFExporter();
@@ -1418,6 +1640,7 @@ function export_object(object, image) {
 
     }, options);
 }
+//--------------------------------------------PLANET OBJECT POST-------------------------------------------------------\\
 
 
 function export_ring(ringobj, ringindex, ringmat, shaderinfo, isrock) {
@@ -1694,15 +1917,15 @@ function generateImageUi(parent, fontsize, left, url, classname, id) {
     return newUI;
 }
 
-function generateName(parent, fontsize, left, isInfo, colorpallette, regions) {
-    var color = (parent == planet) ? "#FF61DB" : "#ffffff";
+function generateName(parent, fontsize, left, isInfo, colorpallette, region10, name) {
+    var color = (parent == planet) ? "#FF61DB" : "#fffff";
     var label = (isInfo) ? "Planet-Info" : 'text-label';
     var roll = randomRange(0, 10);
     var newText = createTextLabel(fontsize, left, label, color);
     var wordtxt = word(randomRange(3, 25));
 
     if (!isInfo) {
-        newText.setHTML(planet_params.name);
+        newText.setHTML(name);
     }
     else {
         var moon = "Moons: " + moonList.length;
@@ -1804,3 +2027,14 @@ function SetUpFlatBelt(ringData, vertex_text, fragment_text) {
 
     CreateFlatBelt(ringData, vertex_text, fragment_text);
 }
+
+Array.prototype.remove = function() {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
+};

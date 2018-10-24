@@ -9,7 +9,7 @@
 
 		uniform mat4 directionalShadowMatrix[ NUM_DIR_LIGHTS ];
 		varying vec4 vDirectionalShadowCoord[ NUM_DIR_LIGHTS ];
-
+		uniform vec3 customColor;
 		void main() 
 		{	
 			vUv = uv;
