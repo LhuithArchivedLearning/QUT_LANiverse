@@ -100,7 +100,7 @@ function DrawOrbit(planet, centre, currTimeD, auScale, color, i, max) {
 
 }
 
-function CreateRockyBelt(ringData, centre, currTimeD, auScale, numAstos, ringObject, vertex_text, fragment_text, lightpos, list, colors, palleteindex, ringnum) {
+function CreateRockyBelt(ringData, centre, currTimeD, auScale, numAstos, ringObject, vertex_text, fragment_text, lightpos, list, colors, palleteindex, ringnum, planetSize) {
 
     var segmentCount = numAstos;
     var geometry = new THREE.PlaneGeometry(1, 1);
@@ -144,7 +144,7 @@ function CreateRockyBelt(ringData, centre, currTimeD, auScale, numAstos, ringObj
 
         var asto = new THREE.Mesh(geometry, astoMaterial);
         asto.castShadow = true;
-        astosize = randomRange(4, 12);
+        astosize = randomRange(4, 12) * planetSize/100;
         asto.scale.set(astosize, astosize, 1);
         //rotateObject(asto, 0, 0, 90);
         var gyro = new THREE.Gyroscope();
